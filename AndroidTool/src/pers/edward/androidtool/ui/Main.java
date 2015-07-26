@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,20 +14,12 @@ import java.awt.event.ItemListener;
 import java.io.File;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
@@ -37,7 +28,6 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 import pers.edward.androidtool.function.GetGenerateModel;
 import pers.edward.androidtool.function.GetWidgetByXmlParser;
 import pers.edward.androidtool.function.getActivity;
-import pers.edward.androidtool.function.getUrlInterface;
 import pers.edward.androidtool.interfaces.FileChangeListener;
 import pers.edward.androidtool.interfaces.FileChangeListener.setChangeFilePath;
 import pers.edward.androidtool.tool.CommonMethod;
@@ -54,7 +44,6 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private FileAlterationMonitor monitor = null;
 	private CommonMethod common = new CommonMethod(getContentPane());
-
 	public Main() throws Exception {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(800, 400);
