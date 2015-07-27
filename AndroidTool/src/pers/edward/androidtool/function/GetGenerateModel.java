@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pers.edward.androidtool.tool.CommonMethod;
 
@@ -23,7 +25,7 @@ public class GetGenerateModel {
 	public static void main(String[] args) throws Exception {
 
 		GetGenerateModel model = new GetGenerateModel();
-		model.test("F:\\GetEvaluateForNot.json", "C:\\MyWorkspace\\JAVASE\\MyExercise\\AndroidTool\\src\\pers\\edward\\androidtool\\model", "Test2",
+		model.test("F:\\GetAllOrderByUserID.json", "C:\\MyWorkspace\\Android\\YunYiPurchase\\YunYiGou\\src\\com\\zhanyun\\yunyigou\\model", "Test2",
 				"utf-8");
 	}
 
@@ -53,10 +55,11 @@ public class GetGenerateModel {
 		System.err.println("Model文件名：" + fileName);
 
 		String string = CommonMethod.fileToString(parseFileName);
+		// System.out.println(string);
 		String modelFilePath = genertaeFilePath + "\\" + fileName + ".java";
 		System.err.println("Model文件路径：" + modelFilePath);
 
-		List<String> list = parserJsonFile(string);
+		 List<String> list =parserJsonFile(string);
 
 		geterateDomainNameData(list, modelFilePath, fileName, packageName, encodingType);
 	}
@@ -139,18 +142,15 @@ public class GetGenerateModel {
 		result = result.substring(result.indexOf("Result"), result.length());
 		result = result.substring(result.indexOf("{"), result.indexOf("}") + 1);
 		System.err.println("文件内容：" + result);
+		
+		Pattern patten=Pattern.compile("\"([^\":]*)\":");
+		
+		Matcher matcher=patten.matcher(result);
 
-		String[] stringList = result.split(",");
 		List<String> fieldNameList = new ArrayList<String>();
-
-		for (int i = 0; i < stringList.length; i++) {
-			String temp1 = stringList[i];
-			temp1 = temp1.substring(temp1.indexOf("\"") + 1, temp1.indexOf(":") - 1);
-			fieldNameList.add(temp1);
-		}
-
-		for (int i = 0; i < fieldNameList.size(); i++) {
-			System.out.println("字段名：" + fieldNameList.get(i));
+		while(matcher.find()){
+			System.out.println(matcher.group(1));
+			fieldNameList.add(matcher.group(1));
 		}
 
 		return fieldNameList;
