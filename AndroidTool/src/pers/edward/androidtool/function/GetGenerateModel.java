@@ -59,9 +59,10 @@ public class GetGenerateModel {
 		String modelFilePath = genertaeFilePath + "\\" + fileName + ".java";
 		System.err.println("Model文件路径：" + modelFilePath);
 
-		 List<String> list =parserJsonFile(string);
+		List<String> list = parserJsonFile(string);
 
-		geterateDomainNameData(list, modelFilePath, fileName, packageName, encodingType);
+		// geterateDomainNameData(list, modelFilePath, fileName, packageName,
+		// encodingType);
 	}
 
 	/**
@@ -133,27 +134,37 @@ public class GetGenerateModel {
 	 * @return
 	 */
 	public List<String> parserJsonFile(String result) {
-		// 判断JSON是否一个数组
-		if (result.indexOf("[") != -1) {
-			isBracket = true;
-		} else
-			isBracket = false;
-
-		result = result.substring(result.indexOf("Result"), result.length());
-		result = result.substring(result.indexOf("{"), result.indexOf("}") + 1);
-		System.err.println("文件内容：" + result);
+		System.out.println(result);
 		
-		Pattern patten=Pattern.compile("\"([^\":]*)\":");
 		
-		Matcher matcher=patten.matcher(result);
+		
+		
+		
+		return null;
+		
+		
+		
+//		// 判断JSON是否一个数组
+//		if (result.indexOf("[") != -1) {
+//			isBracket = true;
+//		} else
+//			isBracket = false;
+//
+//		result = result.substring(result.indexOf("Result"), result.length());
+//		result = result.substring(result.indexOf("{"), result.indexOf("}") + 1);
+//		System.err.println("文件内容：" + result);
 
-		List<String> fieldNameList = new ArrayList<String>();
-		while(matcher.find()){
-			System.out.println(matcher.group(1));
-			fieldNameList.add(matcher.group(1));
-		}
+//		Pattern patten = Pattern.compile("\"([^\":]*)\":");
+//
+//		Matcher matcher = patten.matcher(result);
+//
+//		List<String> fieldNameList = new ArrayList<String>();
+//		while (matcher.find()) {
+//			System.out.println(matcher.group(1));
+//			fieldNameList.add(matcher.group(1));
+//		}
 
-		return fieldNameList;
+//		return fieldNameList;
 	}
 
 }

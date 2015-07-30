@@ -12,7 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import pers.edward.androidtool.function.getUrlInterface;
+import pers.edward.androidtool.model.NetworkUrlModel;
 import pers.edward.androidtool.model.RecordSelectedIndexModel;
+import pers.edward.androidtool.model.StoreSubInterfaceModel;
 import pers.edward.androidtool.tool.CommonMethod;
 
 /**
@@ -21,7 +23,8 @@ import pers.edward.androidtool.tool.CommonMethod;
  * @author Edward
  * 
  */
-public class GenerateUrlInterface {
+public class GenerateUrlInterface
+{
 	private JPanel jpanel;
 	private JLabel label13, label14, label15;
 	private JTextField field7, field8, field9;
@@ -29,14 +32,16 @@ public class GenerateUrlInterface {
 	private CommonMethod common;
 	private String codingFormat;
 
-	public GenerateUrlInterface(JPanel jpanel, Container container, String codingFormat) {
+	public GenerateUrlInterface(JPanel jpanel, Container container, String codingFormat)
+	{
 		this.jpanel = jpanel;
 		this.codingFormat = codingFormat;
 		common = new CommonMethod(container);
 		draw();
 	}
 
-	public void draw() {
+	public void draw()
+	{
 		label13 = new JLabel("输入Url接口地址：");
 		label13.setBounds(10, 10, 150, 30);
 		jpanel.add(label13);
@@ -65,37 +70,40 @@ public class GenerateUrlInterface {
 		button6.setBounds(10, 250, 150, 30);
 		jpanel.add(button6);
 
-		button6.addActionListener(new ActionListener() {
+		button6.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0)
+			{
 				// TODO Auto-generated method stub
 
-				getUrlInterface getInterface = new getUrlInterface();
-				try {
-					getInterface.test("http://120.24.62.95:9202",
-							"C:\\MyWorkspace\\JAVASE\\MyExercise\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java",
-							"INTERNET_URL", "gbk");
-
-					List<RecordSelectedIndexModel> list = new ArrayList<RecordSelectedIndexModel>();
-
-					for (int i = 1; i <= 3; i++) {
-						RecordSelectedIndexModel model = new RecordSelectedIndexModel();
-						model.setIndex(i);
-						List<Integer> tempList = new ArrayList<Integer>();
-						tempList.add(1);
-						tempList.add(3);
-						tempList.add(2);
-						model.setSubListIndex(tempList);
-
-						list.add(model);
-					}
-					
-					getInterface.outputUrlToTargetFile(list);
-
-				} catch (Exception e) {
+				try
+				{
+					SelectUrlInterface temp = new SelectUrlInterface();
+				} catch (Exception e)
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+				// List<RecordSelectedIndexModel> list = new
+				// ArrayList<RecordSelectedIndexModel>();
+				//
+				// for (int i = 1; i <= 3; i++) {
+				// RecordSelectedIndexModel model = new
+				// RecordSelectedIndexModel();
+				// model.setIndex(i);
+				// List<Integer> tempList = new ArrayList<Integer>();
+				// tempList.add(1);
+				// tempList.add(3);
+				// tempList.add(2);
+				// model.setSubListIndex(tempList);
+				//
+				// list.add(model);
+				// }
+				//
+				// getInterface.outputUrlToTargetFile(list);
+
 				// try {
 				// getInterface.test(field7.getText().toString(),
 				// field8.getText().toString(), field9.getText().toString(),

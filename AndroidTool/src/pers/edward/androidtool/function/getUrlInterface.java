@@ -28,7 +28,8 @@ import pers.edward.androidtool.model.StoreSubInterfaceModel;
  * 
  * @version 2.0 getUrlInterface
  */
-public class getUrlInterface {
+public class getUrlInterface
+{
 	private String codingType;
 	private List<Model> list = new ArrayList<Model>();
 	// 存储接口实体类列表
@@ -36,13 +37,19 @@ public class getUrlInterface {
 	// 存储子接口地址列表
 	private List<StoreSubInterfaceModel> storeSubInterfaceList = new ArrayList<StoreSubInterfaceModel>();
 
-	public static void main(String[] args) throws Exception {
+	public List<StoreSubInterfaceModel> getStoreSubInterfaceList()
+	{
+		return storeSubInterfaceList;
+	}
+
+	public static void main(String[] args) throws Exception
+	{
 
 		getUrlInterface main = new getUrlInterface();
 		// 酒店接口地址
-		String temp = "http://120.24.62.95:9202";
+//		String temp = "http://120.25.218.242:9505/index.aspx";
 		// 云易购
-		// String temp="http://120.25.218.242:9012/";
+		 String temp="http://120.25.218.242:9012/";
 		main.test(temp, "C:\\MyWorkspace\\JAVASE\\MyExercise\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java", "INTERNET_URL",
 				"gbk");
 	}
@@ -58,13 +65,15 @@ public class getUrlInterface {
 	 *            编码类型
 	 * @throws Exception
 	 */
-	public void test(String interfaceAddressUrl, String saveInterfaceFile, String domainNameAndPortConstant, String codingType) throws Exception {
+	public void test(String interfaceAddressUrl, String saveInterfaceFile, String domainNameAndPortConstant, String codingType) throws Exception
+	{
 
 		Pattern pattern = Pattern.compile("http://\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}:\\d{4}");
 		Matcher matcher1 = pattern.matcher(interfaceAddressUrl);
 		String domainNameAndPort = null;
 		// 判断子接口是否带类似http://123.123.123.123:9999
-		if (matcher1.find()) {
+		if (matcher1.find())
+		{
 			System.err.println("总地址IP：" + matcher1.group());
 			// 解析出IP地址
 			domainNameAndPort = matcher1.group();
@@ -76,21 +85,23 @@ public class getUrlInterface {
 		parserNetworkUrl(interfaceAddressUrl, domainNameAndPort);
 
 		// 模拟用户点击状态
-		List<RecordSelectedIndexModel> listTemp = new ArrayList<RecordSelectedIndexModel>();
-		for (int i = 0; i < storeSubInterfaceList.size(); i++) {
-			RecordSelectedIndexModel model = new RecordSelectedIndexModel();
-			model.setIndex(i);
-			List<Integer> list = new ArrayList<Integer>();
-			storeUrlModelList = storeSubInterfaceList.get(i).getNetworkUrlList();
-			for (int j = 0; j < storeUrlModelList.size(); j++) {
-				list.add(j);
-			}
-			model.setSubListIndex(list);
+//		List<RecordSelectedIndexModel> listTemp = new ArrayList<RecordSelectedIndexModel>();
+//		for (int i = 0; i < storeSubInterfaceList.size(); i++)
+//		{
+//			RecordSelectedIndexModel model = new RecordSelectedIndexModel();
+//			model.setIndex(i);
+//			List<Integer> list = new ArrayList<Integer>();
+//			storeUrlModelList = storeSubInterfaceList.get(i).getNetworkUrlList();
+//			for (int j = 0; j < storeUrlModelList.size(); j++)
+//			{
+//				list.add(j);
+//			}
+//			model.setSubListIndex(list);
+//
+//			listTemp.add(model);
+//		}
 
-			listTemp.add(model);
-		}
-
-		outputUrlToTargetFile(listTemp);
+		// outputUrlToTargetFile(listTemp);
 
 		// for (int i = 0; i < storeSubInterfaceList.size(); i++) {
 		// System.err.println(storeSubInterfaceList.get(i).getInterfaceTitle() +
@@ -113,7 +124,8 @@ public class getUrlInterface {
 		// for (int i = 0; i < parserResultString.size(); i++) {
 		// // System.err.println(main.parserResultString.get(i));
 		// parserString(parserResultString.get(i));
-		assembleData(saveInterfaceFile, domainNameAndPortConstant, domainNameAndPort);
+		// assembleData(saveInterfaceFile, domainNameAndPortConstant,
+		// domainNameAndPort);
 		// }
 	}
 
@@ -125,7 +137,8 @@ public class getUrlInterface {
 	 * @param size
 	 * @throws Exception
 	 */
-	public void inputStreamToFile(String saveInterfaceFile, Model model, int index, int size) throws Exception {
+	public void inputStreamToFile(String saveInterfaceFile, Model model, int index, int size) throws Exception
+	{
 
 		// 输入生成目标文件
 		String fileName = saveInterfaceFile;
@@ -148,7 +161,8 @@ public class getUrlInterface {
 		String temp5 = "\t" + model.getInterfaceNewAddress() + "\n\n\n";
 		rf.write(temp5.getBytes(codingType));
 
-		if (index == size - 1) {
+		if (index == size - 1)
+		{
 			rf.seek(rf.length() - 1);
 			Date date = new Date();
 			String string;
@@ -167,15 +181,18 @@ public class getUrlInterface {
 	 * 
 	 * @param list
 	 */
-	public void outputUrlToTargetFile(List<RecordSelectedIndexModel> list) {
-		for (int i = 0; i < list.size(); i++) {
+	public void outputUrlToTargetFile(List<RecordSelectedIndexModel> list)
+	{
+		for (int i = 0; i < list.size(); i++)
+		{
 			RecordSelectedIndexModel model = list.get(i);
 			String temp = storeSubInterfaceList.get(model.getIndex()).getInterfaceTitle();
 			System.err.println(temp);
 			List<NetworkUrlModel> networkList = storeSubInterfaceList.get(model.getIndex()).getNetworkUrlList();
 			List<Integer> listTemp = model.getSubListIndex();
-			for (int j = 0; j < listTemp.size(); j++) {
-				System.out.println(networkList.get(listTemp.get(j)).getUrlName());
+			for (int j = 0; j < listTemp.size(); j++)
+			{
+				System.out.println(networkList.get(listTemp.get(j)).getUrlDescribe());
 			}
 		}
 	}
@@ -185,8 +202,10 @@ public class getUrlInterface {
 	 * 
 	 * @throws Exception
 	 */
-	public void parserSubNetworkUrlData(String domainNameAndPort, String subUrl, StoreSubInterfaceModel storeSubInterfaceModel) throws Exception {
-		if (!"".equals(subUrl)) {
+	public void parserSubNetworkUrlData(String domainNameAndPort, String subUrl, StoreSubInterfaceModel storeSubInterfaceModel) throws Exception
+	{
+		if (!"".equals(subUrl))
+		{
 			Document doc = Jsoup.connect(subUrl).get();
 			String string = doc.toString();
 			// System.err.println(string);
@@ -213,7 +232,8 @@ public class getUrlInterface {
 			// System.err.println(storeSubInterfaceModel.getInterfaceTitle());
 			// 此列表用于存储Url实体类
 			storeUrlModelList = new ArrayList<NetworkUrlModel>();
-			while (matcher.find()) {
+			while (matcher.find())
+			{
 				// System.out.println(matcher.group(1) + "   " +
 				// matcher.group(2) + "   " + matcher.group(3) + "   " +
 				// matcher.group(4) + "   "
@@ -234,12 +254,15 @@ public class getUrlInterface {
 	 * 
 	 * @param getResultData
 	 */
-	public void parserString(String getResultData) {
+	public void parserString(String getResultData)
+	{
 		String[] string = getResultData.split("\n");
 		list = new ArrayList<Model>();
-		for (int i = 0; i < string.length; i++) {
+		for (int i = 0; i < string.length; i++)
+		{
 
-			if (i % 4 == 0 && i != 0) {
+			if (i % 4 == 0 && i != 0)
+			{
 				Model model = new Model();
 				model.setInterfaceName(string[i - 4]);
 				model.setInterfaceAddress(string[i - 3]);
@@ -256,9 +279,11 @@ public class getUrlInterface {
 	 * @param getResultData
 	 * @throws Exception
 	 */
-	public void assembleData(String saveInterfaceFile, String domainNameAndPortConstant, String domainNameAndPort) throws Exception {
+	public void assembleData(String saveInterfaceFile, String domainNameAndPortConstant, String domainNameAndPort) throws Exception
+	{
 
-		for (int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < list.size(); i++)
+		{
 			Model model = list.get(i);
 			System.out.println("/**");
 			System.out.println(" *接口地址：" + model.getInterfaceAddress());
@@ -273,15 +298,18 @@ public class getUrlInterface {
 
 			// 截断?后面的参数
 			int temp = address.indexOf("?");
-			if (temp != -1) {
+			if (temp != -1)
+			{
 				address = address.substring(0, address.indexOf("?"));
 			}
 
-			if (name.indexOf("/") != -1) {
+			if (name.indexOf("/") != -1)
+			{
 				// 生成接口地址
 				model.setInterfaceNewAddress("public static String " + name.replace("/", "") + String.valueOf(i) + "=" + domainNameAndPortConstant
 						+ "+\"" + address + "\";");
-			} else {
+			} else
+			{
 				// 生成接口地址
 				model.setInterfaceNewAddress("public static String " + name + String.valueOf(i) + "=" + domainNameAndPortConstant + "+\"" + address
 						+ "\";");
@@ -300,7 +328,8 @@ public class getUrlInterface {
 	 * 
 	 * @throws Exception
 	 */
-	public void parserNetworkUrl(String url, String domainNameAndPort) throws Exception {
+	public void parserNetworkUrl(String url, String domainNameAndPort) throws Exception
+	{
 		// 获取总接口地址
 		Document docResult = Jsoup.connect(url).get();
 		String string = docResult.toString();
@@ -308,7 +337,8 @@ public class getUrlInterface {
 		// 匹配每个子接口的地址
 		Pattern pattern = Pattern.compile("<a\\s*href\\s*=\\s*['|\"]([a-z|A-Z|/|0-9|:|.|_]+)['|\"]\\s*[^>]*>([^<]*)</a>");
 		Matcher matcher = pattern.matcher(string);
-		while (matcher.find()) {
+		while (matcher.find())
+		{
 			// 获取子接口的后缀地址
 			String getSuffixUrlString = matcher.group(1);
 			// 子接口标题
@@ -320,13 +350,15 @@ public class getUrlInterface {
 			Matcher matcher1 = pattern.matcher(getSuffixUrlString);
 			// 判断子接口是否含有前缀域名和端口http://123.123.123.123:9999
 			StoreSubInterfaceModel model = new StoreSubInterfaceModel();
-			if (matcher1.find()) {
+			if (matcher1.find())
+			{
 				System.err.println("特殊接口（IP地址不正确）：" + getSuffixUrlString);
 				// 如果接口地址有错误，赋值为空
 				model.setInterfaceUrl("");
 				model.setInterfaceTitle(getInterfaceTitle);
 				model.setNetworkUrlList(null);
-			} else {
+			} else
+			{
 				System.err.println("子接口地址：" + domainNameAndPort + "/" + getSuffixUrlString);
 				model.setInterfaceUrl(domainNameAndPort + "/" + getSuffixUrlString);
 				model.setInterfaceTitle(getInterfaceTitle);
