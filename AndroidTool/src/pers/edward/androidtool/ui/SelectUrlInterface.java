@@ -36,8 +36,9 @@ public class SelectUrlInterface extends JFrame
 	private String targetFilePath;
 	private String domainNameAndPort;
 	private String codingType;
+	private static SelectUrlInterface instance = null;
 
-	public SelectUrlInterface(String domainNameAndPortConstant, String targetFilePath, String domainNameAndPort, String codingType) throws Exception
+	private SelectUrlInterface(String domainNameAndPortConstant, String targetFilePath, String domainNameAndPort, String codingType) throws Exception
 	{
 		this.domainNameAndPort = domainNameAndPort;
 		this.domainNameAndPortConstant = domainNameAndPortConstant;
@@ -56,6 +57,33 @@ public class SelectUrlInterface extends JFrame
 		setTitle("选择接口地址界面");
 		common = new CommonMethod(getContentPane());
 		init();
+	}
+
+	/**
+	 * 获取实例
+	 * 
+	 * @param domainNameAndPortConstant
+	 * 
+	 * @param targetFilePath
+	 * 
+	 * @param domainNameAndPort
+	 * 
+	 * @param codingType
+	 * 
+	 * @return
+	 * 
+	 * @throws Exception
+	 */
+	public static SelectUrlInterface getInstance(String domainNameAndPortConstant, String targetFilePath, String domainNameAndPort, String codingType)
+			throws Exception
+	{
+
+		if (instance == null)
+		{
+			instance = new SelectUrlInterface(domainNameAndPortConstant, targetFilePath, domainNameAndPort, codingType);
+		}
+
+		return instance;
 	}
 
 	public void init() throws Exception

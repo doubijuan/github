@@ -32,7 +32,8 @@ import pers.edward.androidtool.interfaces.FileChangeListener;
 import pers.edward.androidtool.interfaces.FileChangeListener.setChangeFilePath;
 import pers.edward.androidtool.tool.CommonMethod;
 
-public class Main extends JFrame implements ActionListener, ItemListener {
+public class Main extends JFrame implements ActionListener, ItemListener
+{
 	private Container container = null;
 	private JTabbedPane tabbedPane = null;
 	private String[] tabName = { "主界面", "生成控件", "生成Model", "生成URL接口", "生成Activity" };
@@ -44,7 +45,9 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private FileAlterationMonitor monitor = null;
 	private CommonMethod common = new CommonMethod(getContentPane());
-	public Main() throws Exception {
+
+	public Main() throws Exception
+	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(800, 400);
 		// 固定窗体大小
@@ -59,7 +62,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 
 		mJpanel = new JPanel[tabName.length];
 
-		for (int i = 0; i < tabName.length; i++) {
+		for (int i = 0; i < tabName.length; i++)
+		{
 			mJpanel[i] = new JPanel();
 			// 设置成绝对布局
 			mJpanel[i].setLayout(null);
@@ -80,7 +84,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	 * 
 	 * @param jpanel
 	 */
-	public void setJPanelFiveLayout(JPanel jpanel) {
+	public void setJPanelFiveLayout(JPanel jpanel)
+	{
 		label16 = new JLabel();
 		label16.setFont(new Font("Dialog", 1, 15));
 		label16.setForeground(Color.red);
@@ -125,15 +130,16 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	 * 
 	 * @param jpanel
 	 */
-	public void setJPanelFourLayout(JPanel jpanel) {
+	public void setJPanelFourLayout(JPanel jpanel)
+	{
 		// C:\MyWorkspace\JAVASE\MyExercise\AndroidTool\src\pers\edward\androidtool\function\TestUrl.java
 
-		GenerateUrlInterface gi = new GenerateUrlInterface(jpanel, getContentPane(), "gbk");
-
+		GenerateUrlInterface.getInstanceInterface(jpanel, getContentPane(), field5.getText().toString());
 	}
 
 	@Override
-	public void itemStateChanged(ItemEvent arg0) {
+	public void itemStateChanged(ItemEvent arg0)
+	{
 		// TODO Auto-generated method stub
 
 	}
@@ -143,7 +149,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	 * 
 	 * @param jpanel
 	 */
-	public void setJPanelThreeLayout(JPanel jpanel) {
+	public void setJPanelThreeLayout(JPanel jpanel)
+	{
 		button4 = new JButton("选择文件");
 		button4.setActionCommand("4");
 		button4.addActionListener(this);
@@ -176,7 +183,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	 * 
 	 * @param jpanel
 	 */
-	public void setJPanelTwoLayout(JPanel jpanel) {
+	public void setJPanelTwoLayout(JPanel jpanel)
+	{
 
 		// new GenerateWidgetInterface(jpanel, getContentPane());
 		// 443
@@ -221,7 +229,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	 * 
 	 * @param jpanel
 	 */
-	public void setJPanelOneLayout(JPanel jpanel) {
+	public void setJPanelOneLayout(JPanel jpanel)
+	{
 		label = new JLabel("输入Activity文件夹路径：");
 		label.setBounds(10, 0, 200, 50);
 		jpanel.add(label);
@@ -280,18 +289,21 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 		jpanel.add(button2);
 	}
 
-	public void stop() throws Exception {
+	public void stop() throws Exception
+	{
 		monitor.stop();
 	}
 
-	public void start() throws Exception {
+	public void start() throws Exception
+	{
 		monitor.start();
 	}
 
 	/**
 	 * 设置布局居中
 	 */
-	public void setLayoutCenter() {
+	public void setLayoutCenter()
+	{
 		int windowWidth = getWidth(); // 获得窗口宽
 		int windowHeight = getHeight(); // 获得窗口高
 		Toolkit kit = Toolkit.getDefaultToolkit(); // 定义工具包
@@ -301,12 +313,14 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 		setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception
+	{
 		final Main main = new Main();
 		main.setVisible(true);
 	}
 
-	public void monitor(String path, FileAlterationListener listener) {
+	public void monitor(String path, FileAlterationListener listener)
+	{
 		FileAlterationObserver observer = new FileAlterationObserver(new File(path));
 		monitor.addObserver(observer);
 		observer.addListener(listener);
@@ -316,28 +330,34 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	 * 按钮监听事件
 	 */
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent arg0)
+	{
 		// TODO Auto-generated method stub
 		Integer integer = Integer.valueOf(arg0.getActionCommand());
-		switch (integer) {
+		switch (integer)
+		{
 		// 开始监听
 		case 1:
-			try {
+			try
+			{
 				File file = new File(field.getText().toString().trim());
-				if (!file.isDirectory()) {
+				if (!file.isDirectory())
+				{
 					common.showErrorMessage("输入的路径目录无效！");
 					return;
 				}
 
 				file = new File(field1.getText().toString().trim());
-				if (!file.isDirectory()) {
+				if (!file.isDirectory())
+				{
 					common.showErrorMessage("输入的路径目录无效！");
 					return;
 				}
 				banTextInput();
 				setListener();
 				start();
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -345,10 +365,12 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 			break;
 		// 停止监听
 		case 2:
-			try {
+			try
+			{
 				cancelTextInput();
 				stop();
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -364,7 +386,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 			break;
 		// 生成Model点击事件
 		case 5:
-			try {
+			try
+			{
 				GetGenerateModel model = new GetGenerateModel();
 				model.test(label11.getText().toString(), field2.getText().toString(), field6.getText().toString(), field5.getText().toString());
 				// new GetGenerateModel(label11.getText().toString(),
@@ -372,7 +395,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 				// field5.getText()
 				// .toString());
 				common.showMessage("生成文件成功！");
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				// TODO Auto-generated catch block
 				common.showErrorMessage("生成Model文件失败");
 				e.printStackTrace();
@@ -397,22 +421,27 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	/**
 	 * 生成控件代码事件
 	 */
-	public void generateCode() {
+	public void generateCode()
+	{
 		String xmlPath1 = xmlPathStr;
 		String targetPath = activityPathStrStr;
 		String methodNmae = field4.getText().toString();
 		String codingType = field5.getText().toString();
-		try {
-			if (!xmlPath1.isEmpty() && !targetPath.isEmpty() && !methodNmae.isEmpty() && !codingType.isEmpty()) {
+		try
+		{
+			if (!xmlPath1.isEmpty() && !targetPath.isEmpty() && !methodNmae.isEmpty() && !codingType.isEmpty())
+			{
 				GetWidgetByXmlParser getWidgetByXmlParser = new GetWidgetByXmlParser();
 				getWidgetByXmlParser.generateWidget(xmlPath1, targetPath, methodNmae, codingType);
 				// new GetWidgetByXmlParser(xmlPath1, targetPath, methodNmae,
 				// codingType);
 				common.showMessage("代码已生成！");
-			} else {
+			} else
+			{
 				common.showErrorMessage("生成代码失败！");
 			}
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			// TODO Auto-generated catch block
 			common.showErrorMessage("生成代码失败！");
 			e.printStackTrace();
@@ -422,22 +451,27 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	/**
 	 * 设置监听事件
 	 */
-	public void setListener() {
+	public void setListener()
+	{
 		monitor = new FileAlterationMonitor(Integer.valueOf(field3.getText().toString()));
-		monitor(field.getText().toString().trim(), new FileChangeListener(new setChangeFilePath() {
+		monitor(field.getText().toString().trim(), new FileChangeListener(new setChangeFilePath()
+		{
 
 			@Override
-			public void alreadyChangeFilePath(File file) {
+			public void alreadyChangeFilePath(File file)
+			{
 				// TODO Auto-generated method stub
 				activityPathStrStr = file.getPath();
 				label6.setText(activityPathStrStr.substring(activityPathStrStr.lastIndexOf("\\") + 1, activityPathStrStr.length()));
 			}
 		}));
 
-		monitor(field1.getText().toString().trim(), new FileChangeListener(new setChangeFilePath() {
+		monitor(field1.getText().toString().trim(), new FileChangeListener(new setChangeFilePath()
+		{
 
 			@Override
-			public void alreadyChangeFilePath(File file) {
+			public void alreadyChangeFilePath(File file)
+			{
 				// TODO Auto-generated method stub
 				xmlPathStr = file.getPath();
 				label7.setText(xmlPathStr.substring(xmlPathStr.lastIndexOf("\\") + 1, xmlPathStr.length()));
@@ -448,7 +482,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	/**
 	 * 禁止文本输入
 	 */
-	public void banTextInput() throws Exception {
+	public void banTextInput() throws Exception
+	{
 		field.setEditable(false);
 		field1.setEditable(false);
 		field2.setEditable(false);
@@ -461,7 +496,8 @@ public class Main extends JFrame implements ActionListener, ItemListener {
 	/**
 	 * 取消文本输入
 	 */
-	public void cancelTextInput() {
+	public void cancelTextInput()
+	{
 		field.setEditable(true);
 		field1.setEditable(true);
 		field2.setEditable(true);

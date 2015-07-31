@@ -55,9 +55,9 @@ public class GetWidgetByXmlParser {
 		parserEmbeddedXmlFile(xmlPath);
 
 		// 写入声明控件变量
-		statementVariable(targetPath, codingType);
-
-		bindView(methodName, targetPath, codingType);
+//		statementVariable(targetPath, codingType);
+//
+//		bindView(methodName, targetPath, codingType);
 	}
 
 	/**

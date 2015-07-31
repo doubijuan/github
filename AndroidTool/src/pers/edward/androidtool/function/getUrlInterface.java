@@ -91,8 +91,11 @@ public class getUrlInterface
 	 * 将接口数据写入目标文件
 	 * 
 	 * @param model
+	 * 
 	 * @param index
+	 * 
 	 * @param size
+	 * 
 	 * @throws Exception
 	 */
 	public void inputStreamToFile(String saveInterfaceFile, String outputString, String codingType) throws Exception
@@ -286,8 +289,8 @@ public class getUrlInterface
 	 */
 	public void parserNetworkUrl(String url, String domainNameAndPort) throws Exception
 	{
-		// 获取总接口地址
-		Document docResult = Jsoup.connect(url).get();
+		// 获取总接口地址(设置10秒延时，避免timeout异常)
+		Document docResult = Jsoup.connect(url).timeout(10*1000).get();
 		String string = docResult.toString();
 		// System.err.println(string);
 		// 匹配每个子接口的地址

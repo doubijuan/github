@@ -30,12 +30,24 @@ public class GenerateUrlInterface
 	private JTextField field7, field8, field9;
 	private JButton button6;
 	private CommonMethod common;
-	private String codingFormat;
+	private String codingType;
+	private static GenerateUrlInterface instance = null;
 
-	public GenerateUrlInterface(JPanel jpanel, Container container, String codingFormat)
+	public static GenerateUrlInterface getInstanceInterface(JPanel jpanel, Container container, String codingType)
+	{
+
+		if (instance == null)
+		{
+			instance = new GenerateUrlInterface(jpanel, container, codingType);
+		}
+
+		return instance;
+	}
+
+	private GenerateUrlInterface(JPanel jpanel, Container container, String codingType)
 	{
 		this.jpanel = jpanel;
-		this.codingFormat = codingFormat;
+		this.codingType = codingType;
 		common = new CommonMethod(container);
 		draw();
 	}
@@ -76,11 +88,9 @@ public class GenerateUrlInterface
 			public void actionPerformed(ActionEvent arg0)
 			{
 				// TODO Auto-generated method stub
-
 				try
 				{
-					SelectUrlInterface temp = new SelectUrlInterface(field7.getText().toString(), field8.getText().toString(), field9.getText()
-							.toString(),"utf-8");
+					SelectUrlInterface.getInstance(field7.getText().toString(), field8.getText().toString(), field9.getText().toString(), codingType);
 				} catch (Exception e)
 				{
 					// TODO Auto-generated catch block
