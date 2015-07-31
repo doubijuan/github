@@ -80,7 +80,7 @@ public class GenerateUrlInterface
 				try
 				{
 					SelectUrlInterface temp = new SelectUrlInterface(field7.getText().toString(), field8.getText().toString(), field9.getText()
-							.toString(),"gbk");
+							.toString(),"utf-8");
 				} catch (Exception e)
 				{
 					// TODO Auto-generated catch block
