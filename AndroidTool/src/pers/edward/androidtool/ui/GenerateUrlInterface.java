@@ -58,7 +58,7 @@ public class GenerateUrlInterface
 		field7.setBounds(170, 10, 600, 30);
 		jpanel.add(field7);
 
-		field8 = new JTextField("C:\\MyWorkspace\\JAVASE\\MyExercise\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java");
+		field8 = new JTextField("C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java");
 		field8.setBounds(170, 50, 600, 30);
 		jpanel.add(field8);
 
@@ -79,41 +79,13 @@ public class GenerateUrlInterface
 
 				try
 				{
-					SelectUrlInterface temp = new SelectUrlInterface();
+					SelectUrlInterface temp = new SelectUrlInterface(field7.getText().toString(), field8.getText().toString(), field9.getText()
+							.toString(),"gbk");
 				} catch (Exception e)
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-				// List<RecordSelectedIndexModel> list = new
-				// ArrayList<RecordSelectedIndexModel>();
-				//
-				// for (int i = 1; i <= 3; i++) {
-				// RecordSelectedIndexModel model = new
-				// RecordSelectedIndexModel();
-				// model.setIndex(i);
-				// List<Integer> tempList = new ArrayList<Integer>();
-				// tempList.add(1);
-				// tempList.add(3);
-				// tempList.add(2);
-				// model.setSubListIndex(tempList);
-				//
-				// list.add(model);
-				// }
-				//
-				// getInterface.outputUrlToTargetFile(list);
-
-				// try {
-				// getInterface.test(field7.getText().toString(),
-				// field8.getText().toString(), field9.getText().toString(),
-				// codingFormat);
-				// common.showMessage("生成接口成功！");
-				// } catch (Exception e) {
-				// // TODO Auto-generated catch block
-				// common.showErrorMessage("生成接口失败！");
-				// e.printStackTrace();
-				// }
 
 			}
 		});

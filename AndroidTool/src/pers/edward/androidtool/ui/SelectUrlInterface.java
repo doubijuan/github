@@ -18,6 +18,7 @@ import pers.edward.androidtool.function.getUrlInterface;
 import pers.edward.androidtool.model.NetworkUrlModel;
 import pers.edward.androidtool.model.RecordSelectedIndexModel;
 import pers.edward.androidtool.model.StoreSubInterfaceModel;
+import pers.edward.androidtool.tool.CommonMethod;
 
 /**
  * 选择接口界面
@@ -27,11 +28,22 @@ import pers.edward.androidtool.model.StoreSubInterfaceModel;
  */
 public class SelectUrlInterface extends JFrame
 {
+	private CommonMethod common;
 	private List<RecordSelectedIndexModel> list;
 	private getUrlInterface getInterface;
 
-	public SelectUrlInterface() throws Exception
+	private String domainNameAndPortConstant;
+	private String targetFilePath;
+	private String domainNameAndPort;
+	private String codingType;
+
+	public SelectUrlInterface(String domainNameAndPortConstant, String targetFilePath, String domainNameAndPort, String codingType) throws Exception
 	{
+		this.domainNameAndPort = domainNameAndPort;
+		this.domainNameAndPortConstant = domainNameAndPortConstant;
+		this.targetFilePath = targetFilePath;
+		this.codingType = codingType;
+
 		setLayout(null);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -42,19 +54,18 @@ public class SelectUrlInterface extends JFrame
 		// 设置Swing界面UI跟随系统变化
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setTitle("选择接口地址界面");
-
+		common = new CommonMethod(getContentPane());
 		init();
 	}
 
 	public void init() throws Exception
 	{
 		getInterface = new getUrlInterface();
-		getInterface.test("http://120.24.62.95:9202",
-				"C:\\MyWorkspace\\JAVASE\\MyExercise\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java", "INTERNET_URL", "gbk");
+		getInterface.test(domainNameAndPortConstant, targetFilePath, domainNameAndPort, codingType);
 
 		List<StoreSubInterfaceModel> getTreeList = getInterface.getStoreSubInterfaceList();
 		// 生成树形结构
-		generateTreeList(getTreeList);
+		generateTreeList(getTreeList, codingType);
 
 	}
 
@@ -63,7 +74,7 @@ public class SelectUrlInterface extends JFrame
 	 * 
 	 * @param getTreeList
 	 */
-	public void generateTreeList(List<StoreSubInterfaceModel> getTreeList)
+	public void generateTreeList(List<StoreSubInterfaceModel> getTreeList, String codingType)
 	{
 		JTree tree = new JTree();
 		CheckBoxTreeNode rootNode = new CheckBoxTreeNode("全选");
@@ -128,15 +139,24 @@ public class SelectUrlInterface extends JFrame
 					if (third.isSelected)
 					{
 						indexList.add(j);
-						System.out.println(third.isSelected);
-
 					}
 				}
 				indexModel.setSubListIndex(indexList);
 				list.add(indexModel);
 			}
 
-			getInterface.outputUrlToTargetFile(list);
+			// 将数据输出到目标文件中
+			try
+			{
+				getInterface.outputUrlToTargetFile(list, targetFilePath, domainNameAndPortConstant, domainNameAndPort, codingType);
+
+				common.showMessage("生成接口成功！");
+			} catch (Exception e)
+			{
+				common.showErrorMessage("生成接口失败！");
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 	}
