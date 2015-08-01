@@ -50,14 +50,13 @@ public class GetWidgetByXmlParser {
 	 */
 	public void generateWidget(String xmlPath, String targetPath, String methodName, String codingType) throws Exception {
 		isRegListener = true;
-
 		// 解析文件
 		parserEmbeddedXmlFile(xmlPath);
 
 		// 写入声明控件变量
-//		statementVariable(targetPath, codingType);
-//
-//		bindView(methodName, targetPath, codingType);
+		statementVariable(targetPath, codingType);
+
+		bindView(methodName, targetPath, codingType);
 	}
 
 	/**

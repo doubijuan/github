@@ -26,7 +26,6 @@ import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import pers.edward.androidtool.function.GetGenerateModel;
-import pers.edward.androidtool.function.GetWidgetByXmlParser;
 import pers.edward.androidtool.function.getActivity;
 import pers.edward.androidtool.interfaces.FileChangeListener;
 import pers.edward.androidtool.interfaces.FileChangeListener.setChangeFilePath;
@@ -34,6 +33,7 @@ import pers.edward.androidtool.tool.CommonMethod;
 
 public class Main extends JFrame implements ActionListener, ItemListener
 {
+	private GenerateWidgetInterface generateWidgetInterface;
 	private Container container = null;
 	private JTabbedPane tabbedPane = null;
 	private String[] tabName = { "主界面", "生成控件", "生成Model", "生成URL接口", "生成Activity" };
@@ -86,43 +86,45 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	 */
 	public void setJPanelFiveLayout(JPanel jpanel)
 	{
-		label16 = new JLabel();
-		label16.setFont(new Font("Dialog", 1, 15));
-		label16.setForeground(Color.red);
-		label16.setBounds(170, 10, 500, 30);
-		jpanel.add(label16);
+		GenerateActivityInterface activityInterface = new GenerateActivityInterface(jpanel, getContentPane());
 
-		label18 = new JLabel();
-		label18.setFont(new Font("Dialog", 1, 15));
-		label18.setForeground(Color.red);
-		label18.setBounds(170, 50, 500, 30);
-		jpanel.add(label18);
-
-		label17 = new JLabel("继承类：");
-		label17.setBounds(10, 100, 120, 30);
-		jpanel.add(label17);
-
-		button7 = new JButton("选择xml布局文件路径");
-		button7.setBounds(10, 10, 150, 30);
-		button7.addActionListener(this);
-		button7.setActionCommand("6");
-		jpanel.add(button7);
-
-		button8 = new JButton("选择配置文件路径");
-		button8.setBounds(10, 50, 150, 30);
-		button8.addActionListener(this);
-		button8.setActionCommand("10");
-		jpanel.add(button8);
-
-		field10 = new JTextField("Activity");
-		field10.setBounds(100, 100, 200, 30);
-		jpanel.add(field10);
-
-		button9 = new JButton("生成Activity");
-		button9.setBounds(10, 200, 150, 30);
-		button9.addActionListener(this);
-		button9.setActionCommand("8");
-		jpanel.add(button9);
+//		label16 = new JLabel();
+//		label16.setFont(new Font("Dialog", 1, 15));
+//		label16.setForeground(Color.red);
+//		label16.setBounds(170, 10, 500, 30);
+//		jpanel.add(label16);
+//
+//		label18 = new JLabel();
+//		label18.setFont(new Font("Dialog", 1, 15));
+//		label18.setForeground(Color.red);
+//		label18.setBounds(170, 50, 500, 30);
+//		jpanel.add(label18);
+//
+//		label17 = new JLabel("继承类：");
+//		label17.setBounds(10, 100, 120, 30);
+//		jpanel.add(label17);
+//
+//		button7 = new JButton("选择xml布局文件路径");
+//		button7.setBounds(10, 10, 150, 30);
+//		button7.addActionListener(this);
+//		button7.setActionCommand("6");
+//		jpanel.add(button7);
+//
+//		button8 = new JButton("选择配置文件路径");
+//		button8.setBounds(10, 50, 150, 30);
+//		button8.addActionListener(this);
+//		button8.setActionCommand("10");
+//		jpanel.add(button8);
+//
+//		field10 = new JTextField("Activity");
+//		field10.setBounds(100, 100, 200, 30);
+//		jpanel.add(field10);
+//
+//		button9 = new JButton("生成Activity");
+//		button9.setBounds(10, 200, 150, 30);
+//		button9.addActionListener(this);
+//		button9.setActionCommand("8");
+//		jpanel.add(button9);
 	}
 
 	/**
@@ -185,43 +187,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	 */
 	public void setJPanelTwoLayout(JPanel jpanel)
 	{
-
-		// new GenerateWidgetInterface(jpanel, getContentPane());
-		// 443
-		label4 = new JLabel("当前Activity文件路径：");
-		label4.setBounds(10, 0, 200, 50);
-		jpanel.add(label4);
-
-		label5 = new JLabel("当前xml文件路径：");
-		label5.setBounds(10, 40, 200, 50);
-		jpanel.add(label5);
-
-		label6 = new JLabel("暂无");
-		label6.setFont(new Font("Dialog", 1, 20));
-		label6.setForeground(Color.red);
-		label6.setBounds(150, 0, 600, 50);
-		jpanel.add(label6);
-
-		label7 = new JLabel("暂无");
-		label7.setFont(new Font("Dialog", 1, 20));
-		label7.setForeground(Color.red);
-		label7.setBounds(150, 40, 600, 50);
-		jpanel.add(label7);
-
-		label8 = new JLabel("输入方法名：");
-		label8.setBounds(10, 80, 200, 50);
-		jpanel.add(label8);
-
-		field4 = new JTextField("protected void bindView()");
-		field4.setBounds(150, 90, 300, 30);
-		jpanel.add(field4);
-
-		button3 = new JButton("生成代码");
-		button3.setBounds(10, 180, 150, 30);
-		button3.setActionCommand("3");
-		button3.addActionListener(this);
-		jpanel.add(button3);
-
+		generateWidgetInterface = new GenerateWidgetInterface(jpanel, getContentPane(), field5.getText().toString());
 	}
 
 	/**
@@ -259,11 +225,11 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		field5.setBounds(450, 130, 100, 30);
 		jpanel.add(field5);
 
-		field = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\YiHuaHotel\\src\\com\\zhanyun\\yihuahotel\\activities");
+		field = new JTextField("C:\\MyWorkspace\\Android\\YunYiPurchase\\YunYiGou\\src\\com\\zhanyun\\yunyigou\\activities");
 		field.setBounds(170, 10, 600, 30);
 		jpanel.add(field);
 
-		field1 = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\YiHuaHotel\\res\\layout");
+		field1 = new JTextField("C:\\MyWorkspace\\Android\\YunYiPurchase\\YunYiGou\\res\\layout");
 		field1.setBounds(170, 50, 600, 30);
 		jpanel.add(field1);
 
@@ -376,10 +342,6 @@ public class Main extends JFrame implements ActionListener, ItemListener
 			}
 			break;
 
-		case 3:
-			generateCode();
-			break;
-
 		case 4:
 
 			common.fileChooice(label11, ".json");
@@ -419,36 +381,6 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	}
 
 	/**
-	 * 生成控件代码事件
-	 */
-	public void generateCode()
-	{
-		String xmlPath1 = xmlPathStr;
-		String targetPath = activityPathStrStr;
-		String methodNmae = field4.getText().toString();
-		String codingType = field5.getText().toString();
-		try
-		{
-			if (!xmlPath1.isEmpty() && !targetPath.isEmpty() && !methodNmae.isEmpty() && !codingType.isEmpty())
-			{
-				GetWidgetByXmlParser getWidgetByXmlParser = new GetWidgetByXmlParser();
-				getWidgetByXmlParser.generateWidget(xmlPath1, targetPath, methodNmae, codingType);
-				// new GetWidgetByXmlParser(xmlPath1, targetPath, methodNmae,
-				// codingType);
-				common.showMessage("代码已生成！");
-			} else
-			{
-				common.showErrorMessage("生成代码失败！");
-			}
-		} catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			common.showErrorMessage("生成代码失败！");
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * 设置监听事件
 	 */
 	public void setListener()
@@ -462,7 +394,9 @@ public class Main extends JFrame implements ActionListener, ItemListener
 			{
 				// TODO Auto-generated method stub
 				activityPathStrStr = file.getPath();
-				label6.setText(activityPathStrStr.substring(activityPathStrStr.lastIndexOf("\\") + 1, activityPathStrStr.length()));
+				generateWidgetInterface.setActivityPathStrStr(activityPathStrStr);
+				generateWidgetInterface.getLabel6().setText(
+						activityPathStrStr.substring(activityPathStrStr.lastIndexOf("\\") + 1, activityPathStrStr.length()));
 			}
 		}));
 
@@ -474,7 +408,8 @@ public class Main extends JFrame implements ActionListener, ItemListener
 			{
 				// TODO Auto-generated method stub
 				xmlPathStr = file.getPath();
-				label7.setText(xmlPathStr.substring(xmlPathStr.lastIndexOf("\\") + 1, xmlPathStr.length()));
+				generateWidgetInterface.setXmlPathStr(xmlPathStr);
+				generateWidgetInterface.getLabel7().setText(xmlPathStr.substring(xmlPathStr.lastIndexOf("\\") + 1, xmlPathStr.length()));
 			}
 		}));
 	}

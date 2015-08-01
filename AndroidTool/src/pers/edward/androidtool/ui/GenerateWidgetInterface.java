@@ -20,24 +20,68 @@ import pers.edward.androidtool.tool.CommonMethod;
  * @author Edward
  * 
  */
-public class GenerateWidgetInterface implements ActionListener {
+public class GenerateWidgetInterface
+{
 	private JPanel jpanel;
 	private Container container;
-	private JLabel label, label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
-	private JLabel label12, label13, label14, label15, label16, label17, label18;
-	private JTextField field, field1, field2, field3, field4, field5, field6, field7, field8, field9, field10, field11;
-	private JButton button1, button2, button3, button4, button5, button6, button7, button8, button9;
+	private JLabel label4, label5, label6, label7, label8;
+	private JTextField field4;
+	private JButton button3;
 	private String activityPathStrStr = "", xmlPathStr = "";
+	private String codingType;
 	private CommonMethod common;
 
-	public GenerateWidgetInterface(JPanel jpanel, Container container) {
+	public JLabel getLabel6()
+	{
+		return label6;
+	}
+
+	public void setLabel6(JLabel label6)
+	{
+		this.label6 = label6;
+	}
+
+	public JLabel getLabel7()
+	{
+		return label7;
+	}
+
+	public void setLabel7(JLabel label7)
+	{
+		this.label7 = label7;
+	}
+
+	public String getActivityPathStrStr()
+	{
+		return activityPathStrStr;
+	}
+
+	public void setActivityPathStrStr(String activityPathStrStr)
+	{
+		this.activityPathStrStr = activityPathStrStr;
+	}
+
+	public String getXmlPathStr()
+	{
+		return xmlPathStr;
+	}
+
+	public void setXmlPathStr(String xmlPathStr)
+	{
+		this.xmlPathStr = xmlPathStr;
+	}
+
+	public GenerateWidgetInterface(JPanel jpanel, Container container, String codingType)
+	{
+		this.codingType = codingType;
 		this.jpanel = jpanel;
 		this.container = container;
 		common = new CommonMethod(container);
 		draw();
 	}
 
-	public void draw() {
+	public void draw()
+	{
 		label4 = new JLabel("当前Activity文件路径：");
 		label4.setBounds(10, 0, 200, 50);
 		jpanel.add(label4);
@@ -69,40 +113,42 @@ public class GenerateWidgetInterface implements ActionListener {
 		button3 = new JButton("生成代码");
 		button3.setBounds(10, 180, 150, 30);
 		button3.setActionCommand("3");
-		button3.addActionListener(this);
-		jpanel.add(button3);
-	}
+		button3.addActionListener(new ActionListener()
+		{
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		Integer integer = Integer.valueOf(arg0.getActionCommand());
-		switch (integer) {
-		case 3:
-			generateCode();
-			break;
-		}
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				// TODO Auto-generated method stub
+				generateWidget();
+			}
+		});
+		jpanel.add(button3);
 	}
 
 	/**
 	 * 生成控件代码事件
 	 */
-	public void generateCode() {
+	public void generateWidget()
+	{
 		String xmlPath1 = xmlPathStr;
 		String targetPath = activityPathStrStr;
 		String methodNmae = field4.getText().toString();
-		String codingType = field5.getText().toString();
-		try {
-			if (!xmlPath1.isEmpty() && !targetPath.isEmpty() && !methodNmae.isEmpty() && !codingType.isEmpty()) {
+
+		try
+		{
+			if (!xmlPath1.isEmpty() && !targetPath.isEmpty() && !methodNmae.isEmpty() && !codingType.isEmpty())
+			{
 				GetWidgetByXmlParser getWidgetByXmlParser = new GetWidgetByXmlParser();
 				getWidgetByXmlParser.generateWidget(xmlPath1, targetPath, methodNmae, codingType);
-				// new GetWidgetByXmlParser(xmlPath1, targetPath, methodNmae,
-				// codingType);
+
 				common.showMessage("代码已生成！");
-			} else {
+			} else
+			{
 				common.showErrorMessage("生成代码失败！");
 			}
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			// TODO Auto-generated catch block
 			common.showErrorMessage("生成代码失败！");
 			e.printStackTrace();
