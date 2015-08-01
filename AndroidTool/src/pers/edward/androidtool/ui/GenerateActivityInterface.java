@@ -22,16 +22,27 @@ import pers.edward.androidtool.tool.CommonMethod;
  */
 public class GenerateActivityInterface
 {
-	private JLabel label, label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
-	private JLabel label12, label13, label14, label15, label16, label17, label18;
-	private JTextField field, field1, field2, field3, field4, field5, field6, field7, field8, field9, field10, field11;
-	private JButton button1, button2, button3, button4, button5, button6, button7, button8, button9;
+	private JLabel label16, label17, label18;
+	private JTextField field10;
+	private JButton button7, button8, button9;
 	private JPanel jpanel;
 	private Container container;
 	private CommonMethod common;
+	private String activityFolderPath;
+	private static GenerateActivityInterface instance = null;
 
-	public GenerateActivityInterface(JPanel jpanel, Container container)
+	public static GenerateActivityInterface getInstance(JPanel jpanel, Container container, String activityFolderPath)
 	{
+		if (instance == null)
+		{
+			instance = new GenerateActivityInterface(jpanel, container, activityFolderPath);
+		}
+		return instance;
+	}
+
+	private GenerateActivityInterface(JPanel jpanel, Container container, String activityFolderPath)
+	{
+		this.activityFolderPath = activityFolderPath;
 		this.jpanel = jpanel;
 		this.container = container;
 		common = new CommonMethod(container);
@@ -97,8 +108,9 @@ public class GenerateActivityInterface
 			public void actionPerformed(ActionEvent arg0)
 			{
 				// TODO Auto-generated method stub
+
 				getActivity test = new getActivity();
-				test.test(field10.getText().toString(), field.getText().toString(), label16.getText().toString(), label18.getText().toString());
+				test.test(field10.getText().toString(), activityFolderPath, label16.getText().toString(), label18.getText().toString());
 			}
 		});
 		jpanel.add(button9);
