@@ -1,6 +1,8 @@
 package pers.edward.androidtool.tool;
 
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,8 +13,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -29,14 +34,17 @@ import cpdetector.io.UnicodeDetector;
  * @author Edward
  * 
  */
-public class CommonMethod {
+public class CommonMethod
+{
 	private Container container;
 
-	public CommonMethod() {
+	public CommonMethod()
+	{
 
 	}
 
-	public CommonMethod(Container container) {
+	public CommonMethod(Container container)
+	{
 		this.container = container;
 	}
 
@@ -50,7 +58,8 @@ public class CommonMethod {
 	 * @param fileterType
 	 *            过滤的文件类型
 	 */
-	public void fileChooice(JLabel label, String fileterType) {
+	public void fileChooice(JLabel label, String fileterType)
+	{
 		JFileChooser jfc = new JFileChooser();
 		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		jfc.setAcceptAllFileFilterUsed(false);
@@ -58,12 +67,15 @@ public class CommonMethod {
 		jfc.setFileFilter(fileFilter);
 		int value = jfc.showDialog(new JLabel(), "选择文件");
 		// 如果点击了选择文件，则继续进行处理
-		if (value == JFileChooser.APPROVE_OPTION) {
+		if (value == JFileChooser.APPROVE_OPTION)
+		{
 			File file = jfc.getSelectedFile();
-			if (file.exists()) {
+			if (file.exists())
+			{
 				System.out.println(file.getPath());
 				label.setText(file.getPath());
-			} else {
+			} else
+			{
 				JOptionPane.showMessageDialog(container, "选择文件无效！", "系统信息", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -75,15 +87,18 @@ public class CommonMethod {
 	 * @author Edward
 	 * 
 	 */
-	public class FileFilterChooser extends FileFilter {
+	public class FileFilterChooser extends FileFilter
+	{
 		private String fileterType;
 
-		public FileFilterChooser(String filterType) {
+		public FileFilterChooser(String filterType)
+		{
 			this.fileterType = filterType;
 		}
 
 		@Override
-		public boolean accept(File arg0) {
+		public boolean accept(File arg0)
+		{
 			// TODO Auto-generated method stub
 			if (arg0.isDirectory())
 				return true;
@@ -91,7 +106,8 @@ public class CommonMethod {
 		}
 
 		@Override
-		public String getDescription() {
+		public String getDescription()
+		{
 			// TODO Auto-generated method stub
 			return fileterType;
 		}
@@ -103,7 +119,8 @@ public class CommonMethod {
 	 * 
 	 * @param string
 	 */
-	public void showMessage(String string) {
+	public void showMessage(String string)
+	{
 		JOptionPane.showMessageDialog(container, string, "系统信息", JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -112,7 +129,8 @@ public class CommonMethod {
 	 * 
 	 * @param string
 	 */
-	public void showErrorMessage(String string) {
+	public void showErrorMessage(String string)
+	{
 		JOptionPane.showMessageDialog(container, string, "系统信息", JOptionPane.ERROR_MESSAGE);
 	}
 
@@ -123,18 +141,21 @@ public class CommonMethod {
 	 *            文件路径
 	 * @return 字符串
 	 */
-	public static String fileToString(String path) {
+	public static String fileToString(String path)
+	{
 		FileInputStream fis;
 		BufferedInputStream bis;
 		ByteArrayOutputStream bos;
-		try {
+		try
+		{
 			fis = new FileInputStream(path);
 			bis = new BufferedInputStream(fis);
 			bos = new ByteArrayOutputStream();
 
 			int length = 0;
 			byte[] by = new byte[1024];
-			while ((length = bis.read(by)) != -1) {
+			while ((length = bis.read(by)) != -1)
+			{
 				bos.write(by, 0, length);
 			}
 			bos.flush();
@@ -145,15 +166,18 @@ public class CommonMethod {
 			fis.close();
 
 			return result;
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e)
+		{
 			// TODO Auto-generated catch block
 			System.err.println("没有找到此文件！");
 			return null;
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			System.err.println("文件转换字符串失败！");
 			return null;
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			// TODO Auto-generated catch block
 			System.err.println("获取文件编码失败！");
 			return null;
@@ -169,7 +193,8 @@ public class CommonMethod {
 	 *            插入点字符串
 	 * @return 返回插入点的坐标
 	 */
-	public static long seekInsertLocation(String path, String insertStr) {
+	public static long seekInsertLocation(String path, String insertStr)
+	{
 
 		String result = fileToString(path);
 		long index = result.indexOf(insertStr);
@@ -189,7 +214,8 @@ public class CommonMethod {
 	 *            往插入点前进或后退index
 	 * @return
 	 */
-	public static long seekInsertLocation(String path, String insertStr, int index) {
+	public static long seekInsertLocation(String path, String insertStr, int index)
+	{
 
 		String result = fileToString(path);
 		long temp = result.indexOf(insertStr) + index;
@@ -210,8 +236,10 @@ public class CommonMethod {
 	 * @param position
 	 *            插入文件坐标点
 	 */
-	public static boolean insertContentToFile(String path, String insertContent, String codeType, long position) {
-		try {
+	public static boolean insertContentToFile(String path, String insertContent, String codeType, long position)
+	{
+		try
+		{
 			File file = File.createTempFile("tempFile", null);
 			file.deleteOnExit();
 			RandomAccessFile rf = new RandomAccessFile(path, "rw");
@@ -223,7 +251,8 @@ public class CommonMethod {
 			byte[] by = new byte[1024];
 			int length = 0;
 			// 将插入点之后的数据写入缓存中
-			while ((length = rf.read(by)) > 0) {
+			while ((length = rf.read(by)) > 0)
+			{
 				fos.write(by);
 			}
 
@@ -232,7 +261,8 @@ public class CommonMethod {
 			rf.write(insertContent.getBytes(codeType));
 
 			// 将缓存中的数据追加到插入数据的后面
-			while ((length = fis.read(by)) > 0) {
+			while ((length = fis.read(by)) > 0)
+			{
 				rf.write(by, 0, length);
 			}
 
@@ -242,7 +272,8 @@ public class CommonMethod {
 
 			return true;
 
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			System.err.println("插入内容失败！");
 			return false;
@@ -250,7 +281,8 @@ public class CommonMethod {
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		CommonMethod method = new CommonMethod();
 		// String result = method.fileToString("F:\\HealthShopList2.json");
 		// System.out.println(result);
@@ -277,7 +309,8 @@ public class CommonMethod {
 	 * @param path
 	 * @return
 	 */
-	public static String getCodeType(String path) throws Exception {
+	public static String getCodeType(String path) throws Exception
+	{
 		CodepageDetectorProxy detector = CodepageDetectorProxy.getInstance();
 		// detector.add(new ParsingDetector(false));
 		detector.add(JChardetFacade.getInstance());
@@ -290,14 +323,37 @@ public class CommonMethod {
 		Charset charset = null;
 		charset = detector.detectCodepage(f.toURL());
 
-		if (charset != null) {
+		if (charset != null)
+		{
 			// System.out.println(f.getName() + "编码是：" + charset.name());
 			return charset.name();
-		} else {
+		} else
+		{
 			// System.out.println(f.getName() + "未知");
 			return null;
 		}
 
 	}
 
+	public static Matcher PatternAndMatcher(String rule, String result)
+	{
+		Pattern pattern = Pattern.compile(rule);
+		Matcher matcher = pattern.matcher(result);
+
+		return matcher;
+	}
+
+	/**
+	 * 设置布局居中
+	 */
+	public static void setLayoutCenter(JFrame frame)
+	{
+		int windowWidth = frame.getWidth(); // 获得窗口宽
+		int windowHeight = frame.getHeight(); // 获得窗口高
+		Toolkit kit = Toolkit.getDefaultToolkit(); // 定义工具包
+		Dimension screenSize = kit.getScreenSize(); // 获取屏幕的尺寸
+		int screenWidth = screenSize.width; // 获取屏幕的宽
+		int screenHeight = screenSize.height; // 获取屏幕的高
+		frame.setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);
+	}
 }

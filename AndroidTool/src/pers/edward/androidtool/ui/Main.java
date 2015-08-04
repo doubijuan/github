@@ -54,7 +54,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setTitle("Android代码生成器");
 		setLayout(new GridLayout(1, 1));
-		setLayoutCenter();
+		CommonMethod.setLayoutCenter(this);
 		container = getContentPane();
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
@@ -70,7 +70,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 
 		// 设置面板一界面布局
 		setJPanelOneLayout(mJpanel[0]);
-		generateWidgetInterface = new GenerateWidgetInterface(mJpanel[1], getContentPane(), field5.getText().toString());
+		generateWidgetInterface = new GenerateWidgetInterface(mJpanel[1], getContentPane(),this);
 		GenerateModelInterface.getInstanceModel(mJpanel[2], getContentPane(), this);
 		GenerateUrlInterface.getInstanceInterface(mJpanel[3], getContentPane(), field5.getText().toString());
 		GenerateActivityInterface.getInstance(mJpanel[4], getContentPane(), field.getText().toString());
@@ -93,6 +93,26 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		this.field5 = field5;
 	}
 
+	public String getActivityPathStrStr()
+	{
+		return activityPathStrStr;
+	}
+
+	public void setActivityPathStrStr(String activityPathStrStr)
+	{
+		this.activityPathStrStr = activityPathStrStr;
+	}
+
+	public String getXmlPathStr()
+	{
+		return xmlPathStr;
+	}
+
+	public void setXmlPathStr(String xmlPathStr)
+	{
+		this.xmlPathStr = xmlPathStr;
+	}
+
 	@Override
 	public void itemStateChanged(ItemEvent arg0)
 	{
@@ -107,62 +127,62 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	 */
 	public void setJPanelOneLayout(JPanel jpanel)
 	{
-//		label = new JLabel("输入Activity文件夹路径：");
-//		label.setBounds(10, 0, 200, 50);
-//		jpanel.add(label);
-//
-//		label1 = new JLabel("输入xml文件夹路径：");
-//		label1.setBounds(10, 40, 200, 50);
-//		jpanel.add(label1);
-//
-//		label2 = new JLabel("输入model文件夹路径：");
-//		label2.setBounds(10, 80, 200, 50);
-//		jpanel.add(label2);
-//
-//		label3 = new JLabel("监听时间间隔设置：");
-//		label3.setBounds(10, 120, 200, 50);
-//		jpanel.add(label3);
-//
-//		label9 = new JLabel("输入编码方式：");
-//		label9.setBounds(350, 120, 200, 50);
-//		jpanel.add(label9);
-//
-//		label10 = new JLabel("作者：Edward");
-//		label10.setBounds(10, 290, 100, 50);
-//		jpanel.add(label10);
-//
-//		field5 = new JTextField("gbk");
-//		field5.setBounds(450, 130, 100, 30);
-//		jpanel.add(field5);
-//
-//		field = new JTextField("C:\\MyWorkspace\\Android\\YunYiPurchase\\YunYiGou\\src\\com\\zhanyun\\yunyigou\\activities");
-//		field.setBounds(170, 10, 600, 30);
-//		jpanel.add(field);
-//
-//		field1 = new JTextField("C:\\MyWorkspace\\Android\\YunYiPurchase\\YunYiGou\\res\\layout");
-//		field1.setBounds(170, 50, 600, 30);
-//		jpanel.add(field1);
-//
-//		field2 = new JTextField("C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\model");
-//		field2.setBounds(170, 90, 600, 30);
-//		jpanel.add(field2);
-//
-//		field3 = new JTextField("1000");
-//		field3.setBounds(170, 130, 100, 30);
-//		jpanel.add(field3);
-//
-//		button1 = new JButton("开始监听");
-//		button1.setBounds(10, 180, 150, 30);
-//		button1.setActionCommand("1");
-//		button1.addActionListener(this);
-//		jpanel.add(button1);
-//
-//		button2 = new JButton("停止监听");
-//		button2.setBounds(210, 180, 150, 30);
-//		button2.setActionCommand("2");
-//		button2.addActionListener(this);
-//		button2.setEnabled(false);
-//		jpanel.add(button2);
+		label = new JLabel("输入Activity文件夹路径：");
+		label.setBounds(10, 0, 200, 50);
+		jpanel.add(label);
+
+		label1 = new JLabel("输入xml文件夹路径：");
+		label1.setBounds(10, 40, 200, 50);
+		jpanel.add(label1);
+
+		label2 = new JLabel("输入model文件夹路径：");
+		label2.setBounds(10, 80, 200, 50);
+		jpanel.add(label2);
+
+		label3 = new JLabel("监听时间间隔设置：");
+		label3.setBounds(10, 120, 200, 50);
+		jpanel.add(label3);
+
+		label9 = new JLabel("输入编码方式：");
+		label9.setBounds(350, 120, 200, 50);
+		jpanel.add(label9);
+
+		label10 = new JLabel("作者：Edward");
+		label10.setBounds(10, 290, 100, 50);
+		jpanel.add(label10);
+
+		field5 = new JTextField("gbk");
+		field5.setBounds(450, 130, 100, 30);
+		jpanel.add(field5);
+
+		field = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\YiHuaHotel\\src\\com\\zhanyun\\yihuahotel\\activities");
+		field.setBounds(170, 10, 600, 30);
+		jpanel.add(field);
+
+		field1 = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\YiHuaHotel\\res\\layout");
+		field1.setBounds(170, 50, 600, 30);
+		jpanel.add(field1);
+
+		field2 = new JTextField("C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\model");
+		field2.setBounds(170, 90, 600, 30);
+		jpanel.add(field2);
+
+		field3 = new JTextField("1000");
+		field3.setBounds(170, 130, 100, 30);
+		jpanel.add(field3);
+
+		button1 = new JButton("开始监听");
+		button1.setBounds(10, 180, 150, 30);
+		button1.setActionCommand("1");
+		button1.addActionListener(this);
+		jpanel.add(button1);
+
+		button2 = new JButton("停止监听");
+		button2.setBounds(210, 180, 150, 30);
+		button2.setActionCommand("2");
+		button2.addActionListener(this);
+		button2.setEnabled(false);
+		jpanel.add(button2);
 	}
 
 	public void stop() throws Exception
@@ -175,19 +195,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		monitor.start();
 	}
 
-	/**
-	 * 设置布局居中
-	 */
-	public void setLayoutCenter()
-	{
-		int windowWidth = getWidth(); // 获得窗口宽
-		int windowHeight = getHeight(); // 获得窗口高
-		Toolkit kit = Toolkit.getDefaultToolkit(); // 定义工具包
-		Dimension screenSize = kit.getScreenSize(); // 获取屏幕的尺寸
-		int screenWidth = screenSize.width; // 获取屏幕的宽
-		int screenHeight = screenSize.height; // 获取屏幕的高
-		setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);
-	}
+	
 
 	public static void main(String[] args) throws Exception
 	{

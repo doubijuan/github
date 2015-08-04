@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import pers.edward.androidtool.function.GetWidgetByXmlParser;
+import pers.edward.androidtool.model.FileLayoutVariableModel;
+import pers.edward.androidtool.model.VariableDataModel;
 import pers.edward.androidtool.tool.CommonMethod;
 
 /**
@@ -30,6 +33,7 @@ public class GenerateWidgetInterface
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private String codingType;
 	private CommonMethod common;
+	private Main main;
 
 	public JLabel getLabel6()
 	{
@@ -71,9 +75,9 @@ public class GenerateWidgetInterface
 		this.xmlPathStr = xmlPathStr;
 	}
 
-	public GenerateWidgetInterface(JPanel jpanel, Container container, String codingType)
+	public GenerateWidgetInterface(JPanel jpanel, Container container, Main main)
 	{
-		this.codingType = codingType;
+		this.main = main;
 		this.jpanel = jpanel;
 		this.container = container;
 		common = new CommonMethod(container);
@@ -110,7 +114,7 @@ public class GenerateWidgetInterface
 		field4.setBounds(150, 90, 300, 30);
 		jpanel.add(field4);
 
-		button3 = new JButton("生成代码");
+		button3 = new JButton("确定");
 		button3.setBounds(10, 180, 150, 30);
 		button3.setActionCommand("3");
 		button3.addActionListener(new ActionListener()
@@ -120,38 +124,26 @@ public class GenerateWidgetInterface
 			public void actionPerformed(ActionEvent arg0)
 			{
 				// TODO Auto-generated method stub
-				generateWidget();
+
+				try
+				{
+
+					new SelectWidgetVariableInterface(main.getActivityPathStrStr(), main.getXmlPathStr(), main.getField5().getText().toString());
+
+					// SelectWidgetVariableInterface
+					// instance=SelectWidgetVariableInterface.getInstance(main.getActivityPathStrStr(),
+					// main.getXmlPathStr(), main.getField5().getText()
+					// .toString());
+					// instance.init();
+
+				} catch (Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		jpanel.add(button3);
 	}
 
-	/**
-	 * 生成控件代码事件
-	 */
-	public void generateWidget()
-	{
-		String xmlPath1 = xmlPathStr;
-		String targetPath = activityPathStrStr;
-		String methodNmae = field4.getText().toString();
-
-		try
-		{
-			if (!xmlPath1.isEmpty() && !targetPath.isEmpty() && !methodNmae.isEmpty() && !codingType.isEmpty())
-			{
-				GetWidgetByXmlParser getWidgetByXmlParser = new GetWidgetByXmlParser();
-				getWidgetByXmlParser.generateWidget(xmlPath1, targetPath, methodNmae, codingType);
-
-				common.showMessage("代码已生成！");
-			} else
-			{
-				common.showErrorMessage("生成代码失败！");
-			}
-		} catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			common.showErrorMessage("生成代码失败！");
-			e.printStackTrace();
-		}
-	}
 }
