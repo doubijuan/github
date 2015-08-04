@@ -27,13 +27,9 @@ import pers.edward.androidtool.tool.CommonMethod;
  */
 public class GetWidgetByXmlParser
 {
-	private List<String> widgetNameList = new ArrayList<String>();
-	private List<String> widgetIdList = new ArrayList<String>();
-	private List<String> variableNameList = new ArrayList<String>();
 	// store current file method list(存储当前文件列表)
 	private List<String> listMethod = new ArrayList<String>();
 
-	private boolean isRegListener;
 	// 存储布局控件
 	private List<FileLayoutVariableModel> fileLayoutVariableList;
 
@@ -76,93 +72,12 @@ public class GetWidgetByXmlParser
 	 */
 	public void generateWidget(String xmlPath, String targetPath, String codingType) throws Exception
 	{
-		isRegListener = true;
 
 		fileLayoutVariableList = new ArrayList<FileLayoutVariableModel>();
 
 		// 解析文件
-		parserEmbeddedXmlFile(xmlPath);
+		parserEmbeddedXmlFile(xmlPath, codingType);
 
-		// System.out.println();
-		// System.out.println();
-		// for (int i = 0; i < fileLayoutVariableList.size(); i++)
-		// {
-		// File file = new File(fileLayoutVariableList.get(i).getFileName());
-		// System.err.println(file.getName());
-		// List<VariableDataModel> list =
-		// fileLayoutVariableList.get(i).getVariableList();
-		// for (int j = 0; j < list.size(); j++)
-		// {
-		// System.out.println(list.get(j).getVariableType() + "   " +
-		// list.get(j).getVariableName());
-		// }
-		//
-		// }
-
-		// 写入声明控件变量
-		// generateStatementVariable(targetPath,
-		// "String test(String basd){",null, codingType);
-
-		// getTargetFileMethodList(targetPath);
-
-		//
-		// bindView(methodName, targetPath, codingType);
-	}
-
-	/**
-	 * 核心代码，绑定控件数据
-	 * 
-	 * @param methodName
-	 * 
-	 * @param result
-	 * 
-	 * @param targetString
-	 * 
-	 * @throws Exception
-	 */
-	public void bindView(String methodName, String targetString, String condingType) throws Exception
-	{
-		String result = CommonMethod.fileToString(targetString);
-
-		String head = result.substring(0, result.indexOf(methodName)).trim();
-		String tail = result.substring(result.indexOf(methodName), result.length()).trim();
-		head = head + tail.substring(0, tail.indexOf("{") + 1).trim();
-		tail = tail.substring(tail.indexOf("{") + 1, tail.length()).trim();
-
-		RandomAccessFile rf;
-		rf = reSetUpFile(targetString);
-		rf.write(head.getBytes(condingType));
-
-		StringBuffer sb = new StringBuffer();
-		sb.append("\n//以下代码由自动生成器生成\n".getBytes(condingType));
-		for (int i = 0; i < widgetNameList.size(); i++)
-		{
-			sb.append(variableNameList.get(i) + "=" + "(" + widgetNameList.get(i) + ")" + "findViewById(R.id." + widgetIdList.get(i) + ");\n");
-		}
-		sb.append("\n");
-
-		// 注册监听事件
-		if (isRegListener)
-		{
-			for (int i = 0; i < widgetNameList.size(); i++)
-			{
-				String widgetName = widgetNameList.get(i);
-				if (widgetName.equals("ImageView") || widgetName.equals("TextView") || widgetName.equals("ImageButton"))
-				{
-					sb.append(variableNameList.get(i) + "." + "setOnClickListener(this);\n");
-				}
-			}
-			sb.append("\n");
-		}
-
-		rf.write(sb.toString().getBytes(condingType));
-		rf.write(tail.getBytes(condingType));
-		rf.close();
-
-		// long position = CommonMethod.seekInsertLocation(targetString,
-		// methodName);
-		// CommonMethod.insertContentToFile(targetString, "我的测试", codingType,
-		// position);
 	}
 
 	/**
@@ -202,12 +117,14 @@ public class GetWidgetByXmlParser
 	 * @throws Exception
 	 */
 	public void generateStatementAndBindviewVariable(String targetFilePath, String selectedMethodName, List<RecordSelectedIndexModel> list,
-			String codeType) throws Exception
+			String codeType, String modifierType, boolean isAddListener) throws Exception
 	{
 		selectedMethodName = selectedMethodName.replace("(", "\\(*");
 		selectedMethodName = selectedMethodName.replace(")", "\\)*");
 		selectedMethodName = selectedMethodName.replace("{", "\\{*");
-		String targetFileString = CommonMethod.fileToString(targetFilePath);
+
+		String targetFileString = CommonMethod.fileToString(targetFilePath, codeType);
+
 		// System.out.println(targetFileString);
 		// 根据匹配规则，根据public class XXXXX extends XXXXX {和传入进来的方法例如public void
 		// methodTest(String a) {的条件，将此文件的内容分割成三份
@@ -219,8 +136,6 @@ public class GetWidgetByXmlParser
 
 		if (matcher.find())
 		{
-			// sb.append(matcher.group(1) + "\n");
-			// sb.append(matcher.group(2));
 
 			System.out.println(matcher.group(1));
 			sb.append(matcher.group(1) + "\n");
@@ -235,20 +150,20 @@ public class GetWidgetByXmlParser
 					int result = variableTypeString.lastIndexOf(".");
 					if (result != -1)
 					{
-						System.out.println(variableTypeString.substring(result + 1, variableTypeString.length()) + " "
+						System.out.println(modifierType + " " + variableTypeString.substring(result + 1, variableTypeString.length()) + " "
 								+ tempVariable.get(j).getVariableName() + ";");
-						sb.append(variableTypeString.substring(result + 1, variableTypeString.length()) + " " + tempVariable.get(j).getVariableName()
-								+ ";\n");
+						sb.append(modifierType + " " + variableTypeString.substring(result + 1, variableTypeString.length()) + " "
+								+ tempVariable.get(j).getVariableName() + ";\n");
 					} else
 					{
-						System.out.println(variableTypeString + " " + tempVariable.get(j).getVariableName() + ";");
-						sb.append(variableTypeString + " " + tempVariable.get(j).getVariableName() + ";\n");
+						System.out.println(modifierType + " " + variableTypeString + " " + tempVariable.get(j).getVariableName() + ";");
+						sb.append(modifierType + " " + variableTypeString + " " + tempVariable.get(j).getVariableName() + ";\n");
 					}
 				}
 			}
 			System.out.println(matcher.group(2));
 			sb.append(matcher.group(2) + "\n");
-			System.err.println("------------------------------------------------------------------------->");
+			System.err.println("-------------------------------------------------------------------------->");
 			for (int i = 0; i < list.size(); i++)
 			{
 				List<Integer> tempList = list.get(i).getSubListIndex();
@@ -258,7 +173,7 @@ public class GetWidgetByXmlParser
 					String variableTypeString = tempVariable.get(j).getVariableType();
 
 					String tempType = null, tempName = null;
-
+					// 判断变量类型是否自定义控件，如果是自定义控件就有 xxx.xxx的规则，根据规则截取.最后一段作为此变量名
 					int result = variableTypeString.lastIndexOf(".");
 					if (result != -1)
 					{
@@ -273,60 +188,46 @@ public class GetWidgetByXmlParser
 					sb.append(tempName + " = (" + tempType + ") findViewById(R.id." + tempName + ");\n");
 				}
 			}
+			sb.append("\n");
+			// 判断是否应该添加点击事件
+			if (isAddListener)
+			{
+				addListener(list, sb);
+			}
 			System.out.println(matcher.group(3));
 			sb.append(matcher.group(3));
 		} else
 		{
-
 			System.out.println("not find for example public class XXXXX extends XXXXX {");
 		}
-
-		//将数据写入指定文件中
+		// 将数据写入指定文件中
 		inputDataToTargetFile(targetFilePath, sb.toString(), codeType);
-
-		// 实例化控件变量
-		// bindView("public void insertString(String a)", targetFileString);
-
-		// int insertIndex = targetFileString.indexOf("{");
-		//
-		// CommonMethod.insertContentToFile(targetFilePath, "111", codeType,
-		// insertIndex + 1);
-
-		// StringBuffer insertContent = new StringBuffer();
-		// insertContent.append("\n//控件变量声明（由Android自动生成器生成）\n");
-		// System.err.println("总共有" + widgetNameList.size() + "个变量");
-		// for (int i = 0; i < widgetNameList.size(); i++)
-		// {
-		// insertContent.append("private " + widgetNameList.get(i) + " " +
-		// variableNameList.get(i) + ";\n");
-		// }
-		// insertContent.append("\n");
-		//
-		// long position = CommonMethod.seekInsertLocation(path, "{", 1);
-		// CommonMethod.insertContentToFile(path, insertContent.toString(),
-		// codeType, position);
 	}
 
 	/**
-	 * 绑定数据
+	 * 为控件添加监听事件
 	 * 
-	 * @param methodName
+	 * @param list
+	 * 
+	 * @param sb
 	 */
-	public void bindView(String methodName, String result)
+	public void addListener(List<RecordSelectedIndexModel> list, StringBuffer sb)
 	{
-		System.out.println(methodName);
-		methodName = methodName.replace("(", "\\(");
-		methodName = methodName.replace(")", "\\)");
-		// ([\\s\\S]*public void insertString\\(\\)\\s*\\{)([\\s\\S]*)
-
-		Pattern pattern = Pattern.compile("([\\s\\S]*\\s*" + methodName + "\\s*\\{)([\\s\\S]*)");
-		Matcher matcher = pattern.matcher(result);
-
-		if (matcher.find())
+		for (int i = 0; i < list.size(); i++)
 		{
-			System.out.println(matcher.group(1));
-			System.err.println("------------------------------------------------------------------------->");
-			System.out.println(matcher.group(2));
+			List<Integer> tempList = list.get(i).getSubListIndex();
+			List<VariableDataModel> tempVariable = fileLayoutVariableList.get(i).getVariableList();
+			for (int j = 0; j < tempList.size(); j++)
+			{
+				String variableTypeString = tempVariable.get(j).getVariableType();
+
+				if (variableTypeString.equals("TextView") || variableTypeString.equals("ImageView") || variableTypeString.equals("LinearLayout")
+						|| variableTypeString.equals("RelativeLayout") || variableTypeString.equals("ImageButton"))
+				{
+					System.out.println(tempVariable.get(j).getVariableName() + ".setOnClickListener(this);");
+					sb.append(tempVariable.get(j).getVariableName() + ".setOnClickListener(this);\n");
+				}
+			}
 		}
 	}
 
@@ -335,9 +236,9 @@ public class GetWidgetByXmlParser
 	 * 
 	 * @param targetFilepPath
 	 */
-	public List<String> getTargetFileMethodList(String targetFilepPath) throws Exception
+	public List<String> getTargetFileMethodList(String targetFilepPath, String codingType) throws Exception
 	{
-		String result = CommonMethod.fileToString(targetFilepPath);
+		String result = CommonMethod.fileToString(targetFilepPath, codingType);
 
 		// 根据指定规则提取目标文件方法列表
 		Pattern pattern = Pattern.compile("([public|private|protected]*\\s+[\\w]+\\s+[\\w]+\\([^)]*\\)\\s*\\{)");
@@ -347,12 +248,9 @@ public class GetWidgetByXmlParser
 		{
 			listMethod.add(matcher.group(1).trim());
 			// String temp=matcher.group(1).trim();
-			// System.out.println(temp.substring(0, temp.length()-1));
 		}
 
 		return listMethod;
-		// inputVariableInstanceData(targetFilepPath,
-		// "public void insertString(String a) {");
 	}
 
 	/**
@@ -367,6 +265,8 @@ public class GetWidgetByXmlParser
 		try
 		{
 			RandomAccessFile rf = reSetUpFile(targetFilePath);
+			// String temp = new String(variableString.getBytes("iso-8859-1"),
+			// codingType);
 			rf.write(variableString.getBytes(codingType));
 			rf.close();
 		} catch (IOException e)
@@ -423,7 +323,7 @@ public class GetWidgetByXmlParser
 	/**
 	 * @param path
 	 */
-	public void parserEmbeddedXmlFile(String path)
+	public void parserEmbeddedXmlFile(String path, String codingType)
 	{
 		if (path.isEmpty())
 		{
@@ -453,7 +353,7 @@ public class GetWidgetByXmlParser
 			file = new File(currentPath);
 
 			// 将该路径文件转换为String
-			String fileResultString = CommonMethod.fileToString(currentPath);
+			String fileResultString = CommonMethod.fileToString(currentPath, codingType);
 			// System.err.println(fileResultString);
 
 			// 搜索子文件
@@ -470,37 +370,6 @@ public class GetWidgetByXmlParser
 			fileLayoutVariableList.add(model);
 		}
 
-		// String result = CommonMethod.fileToString(path);
-		// // 获取子布局文件
-		// List<String> childFileNameList =
-		// getChildLayout("layout=\"@layout/([a-z|A-Z|0-9\\_]+)", result,
-		// ".xml", true);
-		//
-		// // 先解析主XML文件
-		// parserXmlFile(result, 0);
-		//
-		// // 解析子布局的XML文件
-		// if (childFileNameList.size() != 0)
-		// {
-		// for (int i = 0; i < childFileNameList.size(); i++)
-		// {
-		// // 提取父路径
-		// String parentPath = path.substring(0, path.lastIndexOf("\\"));
-		// // 拼接子文件路径
-		// String childFilePath = parentPath + "\\" + childFileNameList.get(i);
-		// System.err.println("子文件路径：" + childFilePath);
-		//
-		// File file = new File(childFilePath);
-		// if (file.exists())
-		// {
-		// String resultString = CommonMethod.fileToString(childFilePath);
-		// parserXmlFile(resultString, i + 1);
-		// } else
-		// {
-		// System.err.println("子文件不存在");
-		// }
-		// }
-		// }
 	}
 
 	/**
@@ -560,50 +429,4 @@ public class GetWidgetByXmlParser
 		return tempList;
 	}
 
-	/**
-	 * 将控件名称和ID字段提取出来
-	 * 
-	 * @param result
-	 */
-	public void parserXmlFile(String result, int index)
-	{
-		// 由于只需要id/后面的值。因此，加上一个匹配组()。组内只要出现a-z，A-Z或者_一次或多次都算符合条件。
-		// 注意\s*表示可选的空白字符
-		Pattern pattern = Pattern.compile("<([a-z|A-Z|0-9\\.]+)\\s*android:id=\"@\\+id/([a-z|A-Z|0-9\\_]+)\"");
-		Matcher matcher = pattern.matcher(result);
-
-		while (matcher.find())
-		{
-			// 获取控件名称，例如ImageView,TextView
-			String widgetNameStr = matcher.group(1);
-			// 含有include的id构不成控件，跳出循环
-			if (widgetNameStr.equals("include"))
-			{
-				continue;
-			}
-			// 是否自定控件
-			int customWidget = widgetNameStr.lastIndexOf(".");
-			if (customWidget != -1)
-			{
-				widgetNameList.add(widgetNameStr.substring(customWidget + 1, widgetNameStr.length()));
-			} else
-				widgetNameList.add(widgetNameStr);
-
-			String parserXmlResult = matcher.group(2);
-			// 存储控件Id
-			widgetIdList.add(parserXmlResult);
-			String[] tempStrings = parserXmlResult.split("_");
-
-			// 获取控件变量名称
-			String widgetId = "m" + String.valueOf(index);
-			for (int i = 0; i < tempStrings.length; i++)
-			{
-				String temp = String.valueOf(tempStrings[i].charAt(0));
-				widgetId += tempStrings[i].replaceFirst(temp, temp.toUpperCase());
-			}
-			// 存储控件变量ID名称
-			variableNameList.add(widgetId);
-			System.out.println("变量名：" + widgetId + String.valueOf(index) + "     控件名称：" + widgetNameStr + "   R.id文件：" + parserXmlResult);
-		}
-	}
 }

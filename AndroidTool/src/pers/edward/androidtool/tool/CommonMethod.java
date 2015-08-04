@@ -143,6 +143,11 @@ public class CommonMethod
 	 */
 	public static String fileToString(String path)
 	{
+		return fileToString(path, "utf-8");
+	}
+
+	public static String fileToString(String path, String codingType)
+	{
 		FileInputStream fis;
 		BufferedInputStream bis;
 		ByteArrayOutputStream bos;
@@ -159,7 +164,7 @@ public class CommonMethod
 				bos.write(by, 0, length);
 			}
 			bos.flush();
-			String result = new String(bos.toByteArray(), "utf-8");
+			String result = new String(bos.toByteArray(), codingType);
 
 			bos.close();
 			bis.close();

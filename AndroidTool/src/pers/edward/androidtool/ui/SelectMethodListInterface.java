@@ -80,7 +80,7 @@ public class SelectMethodListInterface extends JFrame
 
 	public void init() throws Exception
 	{
-		List<String> listMethod = getWidgetByXmlParser.getTargetFileMethodList(activityPath);
+		List<String> listMethod = getWidgetByXmlParser.getTargetFileMethodList(activityPath, codingType);
 		generateTree(listMethod);
 	}
 
@@ -154,7 +154,7 @@ public class SelectMethodListInterface extends JFrame
 			// 根据前一个页面选中的值
 			try
 			{
-				getWidgetByXmlParser.generateStatementAndBindviewVariable(activityPath, selectedMethodName, list, codingType);
+				getWidgetByXmlParser.generateStatementAndBindviewVariable(activityPath, selectedMethodName, list, codingType, "private", true);
 			} catch (Exception e)
 			{
 				// TODO Auto-generated catch block
