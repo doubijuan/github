@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
@@ -22,6 +23,8 @@ import pers.edward.androidtool.model.VariableDataModel;
 import pers.edward.androidtool.tool.CommonMethod;
 
 /**
+ * 选择控件页面
+ * 
  * @author Edward
  * 
  */
@@ -32,12 +35,17 @@ public class SelectWidgetVariableInterface extends JFrame
 	private static SelectWidgetVariableInterface instance = null;
 	private GetWidgetByXmlParser getWidgetByXmlParser;
 	private String activityPath, xmlPath, codingType;
+	private JRadioButton[] modifierRadioButton;
+	private JRadioButton[] isListenerRadioButton;
 
-	public SelectWidgetVariableInterface(String activityPath, String xmlPath, String codingType) throws Exception
+	public SelectWidgetVariableInterface(String activityPath, String xmlPath, String codingType, JRadioButton[] modifierRadioButton,
+			JRadioButton[] isListenerRadioButton) throws Exception
 	{
 		this.activityPath = activityPath;
 		this.xmlPath = xmlPath;
 		this.codingType = codingType;
+		this.modifierRadioButton = modifierRadioButton;
+		this.isListenerRadioButton = isListenerRadioButton;
 
 		setLayout(null);
 		setVisible(true);
@@ -146,9 +154,8 @@ public class SelectWidgetVariableInterface extends JFrame
 			{
 				if (isChoose)
 				{
-					new SelectMethodListInterface(activityPath, codingType, list, getWidgetByXmlParser);
-					// SelectMethodListInterface.getInstance(activityPath,
-					// codingType, list, getWidgetByXmlParser);
+					new SelectMethodListInterface(activityPath, codingType, list, getWidgetByXmlParser, modifierRadioButton, isListenerRadioButton);
+				
 				} else
 				{
 					common.showErrorMessage("请选择数据！");
@@ -177,15 +184,17 @@ public class SelectWidgetVariableInterface extends JFrame
 	 * 
 	 * @throws Exception
 	 */
-	public static SelectWidgetVariableInterface getInstance(String activityPath, String xmlPath, String codingType) throws Exception
-	{
-
-		if (instance == null)
-		{
-			instance = new SelectWidgetVariableInterface(activityPath, xmlPath, codingType);
-		}
-
-		return instance;
-	}
+	// public static SelectWidgetVariableInterface getInstance(String
+	// activityPath, String xmlPath, String codingType) throws Exception
+	// {
+	//
+	// if (instance == null)
+	// {
+	// instance = new SelectWidgetVariableInterface(activityPath, xmlPath,
+	// codingType);
+	// }
+	//
+	// return instance;
+	// }
 
 }

@@ -70,12 +70,22 @@ public class Main extends JFrame implements ActionListener, ItemListener
 
 		// 设置面板一界面布局
 		setJPanelOneLayout(mJpanel[0]);
-		generateWidgetInterface = new GenerateWidgetInterface(mJpanel[1], getContentPane(),this);
+		generateWidgetInterface = new GenerateWidgetInterface(mJpanel[1], getContentPane(), this);
 		GenerateModelInterface.getInstanceModel(mJpanel[2], getContentPane(), this);
 		GenerateUrlInterface.getInstanceInterface(mJpanel[3], getContentPane(), field5.getText().toString());
 		GenerateActivityInterface.getInstance(mJpanel[4], getContentPane(), field.getText().toString());
 
 		container.add(tabbedPane, BorderLayout.CENTER);
+	}
+
+	public JTextField getField1()
+	{
+		return field1;
+	}
+
+	public void setField1(JTextField field1)
+	{
+		this.field1 = field1;
 	}
 
 	public JTextField getField2()
@@ -151,15 +161,15 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		label10.setBounds(10, 290, 100, 50);
 		jpanel.add(label10);
 
-		field5 = new JTextField("gbk");
+		field5 = new JTextField("utf-8");
 		field5.setBounds(450, 130, 100, 30);
 		jpanel.add(field5);
 
-		field = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\YiHuaHotel\\src\\com\\zhanyun\\yihuahotel\\activities");
+		field = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\src\\cn\\zhanyun\\n18client");
 		field.setBounds(170, 10, 600, 30);
 		jpanel.add(field);
 
-		field1 = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\YiHuaHotel\\res\\layout");
+		field1 = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\res\\layout");
 		field1.setBounds(170, 50, 600, 30);
 		jpanel.add(field1);
 
@@ -194,8 +204,6 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	{
 		monitor.start();
 	}
-
-	
 
 	public static void main(String[] args) throws Exception
 	{

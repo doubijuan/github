@@ -28,10 +28,10 @@ import pers.edward.androidtool.tool.CommonMethod;
 public class GetWidgetByXmlParser
 {
 	// store current file method list(存储当前文件列表)
-	private List<String> listMethod = new ArrayList<String>();
+	private List<String> listMethod;
 
 	// 存储布局控件
-	private List<FileLayoutVariableModel> fileLayoutVariableList;
+	private List<FileLayoutVariableModel> fileLayoutVariableList = new ArrayList<FileLayoutVariableModel>();
 
 	public List<FileLayoutVariableModel> getFileLayoutVariableList()
 	{
@@ -72,12 +72,8 @@ public class GetWidgetByXmlParser
 	 */
 	public void generateWidget(String xmlPath, String targetPath, String codingType) throws Exception
 	{
-
-		fileLayoutVariableList = new ArrayList<FileLayoutVariableModel>();
-
 		// 解析文件
 		parserEmbeddedXmlFile(xmlPath, codingType);
-
 	}
 
 	/**
@@ -140,54 +136,13 @@ public class GetWidgetByXmlParser
 			System.out.println(matcher.group(1));
 			sb.append(matcher.group(1) + "\n");
 			System.err.println("-------------------------------------------------------------------------->");
-			for (int i = 0; i < list.size(); i++)
-			{
-				List<Integer> tempList = list.get(i).getSubListIndex();
-				List<VariableDataModel> tempVariable = fileLayoutVariableList.get(i).getVariableList();
-				for (int j = 0; j < tempList.size(); j++)
-				{
-					String variableTypeString = tempVariable.get(j).getVariableType();
-					int result = variableTypeString.lastIndexOf(".");
-					if (result != -1)
-					{
-						System.out.println(modifierType + " " + variableTypeString.substring(result + 1, variableTypeString.length()) + " "
-								+ tempVariable.get(j).getVariableName() + ";");
-						sb.append(modifierType + " " + variableTypeString.substring(result + 1, variableTypeString.length()) + " "
-								+ tempVariable.get(j).getVariableName() + ";\n");
-					} else
-					{
-						System.out.println(modifierType + " " + variableTypeString + " " + tempVariable.get(j).getVariableName() + ";");
-						sb.append(modifierType + " " + variableTypeString + " " + tempVariable.get(j).getVariableName() + ";\n");
-					}
-				}
-			}
+			// 声明控件
+			generateStatementVariable(list, modifierType, sb);
 			System.out.println(matcher.group(2));
 			sb.append(matcher.group(2) + "\n");
 			System.err.println("-------------------------------------------------------------------------->");
-			for (int i = 0; i < list.size(); i++)
-			{
-				List<Integer> tempList = list.get(i).getSubListIndex();
-				List<VariableDataModel> tempVariable = fileLayoutVariableList.get(i).getVariableList();
-				for (int j = 0; j < tempList.size(); j++)
-				{
-					String variableTypeString = tempVariable.get(j).getVariableType();
-
-					String tempType = null, tempName = null;
-					// 判断变量类型是否自定义控件，如果是自定义控件就有 xxx.xxx的规则，根据规则截取.最后一段作为此变量名
-					int result = variableTypeString.lastIndexOf(".");
-					if (result != -1)
-					{
-						tempType = variableTypeString.substring(result + 1, variableTypeString.length());
-						tempName = tempVariable.get(j).getVariableName();
-					} else
-					{
-						tempType = variableTypeString;
-						tempName = tempVariable.get(j).getVariableName();
-					}
-					System.out.println(tempName + " = (" + tempType + ") findViewById(R.id." + tempName + ");");
-					sb.append(tempName + " = (" + tempType + ") findViewById(R.id." + tempName + ");\n");
-				}
-			}
+			// 绑定控件
+			generateBindViewVariable(list, sb);
 			sb.append("\n");
 			// 判断是否应该添加点击事件
 			if (isAddListener)
@@ -202,6 +157,75 @@ public class GetWidgetByXmlParser
 		}
 		// 将数据写入指定文件中
 		inputDataToTargetFile(targetFilePath, sb.toString(), codeType);
+	}
+
+	/**
+	 * 绑定控件数据
+	 * 
+	 * @param list
+	 * 
+	 * @param sb
+	 */
+	public void generateStatementVariable(List<RecordSelectedIndexModel> list, String modifierType, StringBuffer sb)
+	{
+		// 生成 声明控件代码。
+		for (int i = 0; i < list.size(); i++)
+		{
+			List<Integer> tempList = list.get(i).getSubListIndex();
+			List<VariableDataModel> tempVariable = fileLayoutVariableList.get(i).getVariableList();
+			for (int j = 0; j < tempList.size(); j++)
+			{
+				String variableTypeString = tempVariable.get(j).getVariableType();
+				int result = variableTypeString.lastIndexOf(".");
+				if (result != -1)
+				{
+					System.out.println(modifierType + " " + variableTypeString.substring(result + 1, variableTypeString.length()) + " m" + i
+							+ tempVariable.get(j).getVariableName() + ";");
+					sb.append(modifierType + " " + variableTypeString.substring(result + 1, variableTypeString.length()) + " m" + i
+							+ tempVariable.get(j).getVariableName() + ";\n");
+				} else
+				{
+					System.out.println(modifierType + " " + variableTypeString + " m" + i + tempVariable.get(j).getVariableName() + ";");
+					sb.append(modifierType + " " + variableTypeString + " m" + i + tempVariable.get(j).getVariableName() + ";\n");
+				}
+			}
+		}
+	}
+
+	/**
+	 * 生成声明控件代码
+	 * 
+	 * @param list
+	 * 
+	 * @param sb
+	 */
+	public void generateBindViewVariable(List<RecordSelectedIndexModel> list, StringBuffer sb)
+	{
+		// 生成实例化代码
+		for (int i = 0; i < list.size(); i++)
+		{
+			List<Integer> tempList = list.get(i).getSubListIndex();
+			List<VariableDataModel> tempVariable = fileLayoutVariableList.get(i).getVariableList();
+			for (int j = 0; j < tempList.size(); j++)
+			{
+				String variableTypeString = tempVariable.get(j).getVariableType();
+
+				String tempType = null, tempName = null;
+				// 判断变量类型是否自定义控件，如果是自定义控件就有 xxx.xxx的规则，根据规则截取.最后一段作为此变量名
+				int result = variableTypeString.lastIndexOf(".");
+				if (result != -1)
+				{
+					tempType = variableTypeString.substring(result + 1, variableTypeString.length());
+					tempName = tempVariable.get(j).getVariableName();
+				} else
+				{
+					tempType = variableTypeString;
+					tempName = tempVariable.get(j).getVariableName();
+				}
+				System.out.println("m" + i + tempName + " = (" + tempType + ") findViewById(R.id." + tempName + ");");
+				sb.append("m" + i + tempName + " = (" + tempType + ") findViewById(R.id." + tempName + ");\n");
+			}
+		}
 	}
 
 	/**
@@ -224,8 +248,8 @@ public class GetWidgetByXmlParser
 				if (variableTypeString.equals("TextView") || variableTypeString.equals("ImageView") || variableTypeString.equals("LinearLayout")
 						|| variableTypeString.equals("RelativeLayout") || variableTypeString.equals("ImageButton"))
 				{
-					System.out.println(tempVariable.get(j).getVariableName() + ".setOnClickListener(this);");
-					sb.append(tempVariable.get(j).getVariableName() + ".setOnClickListener(this);\n");
+					System.out.println("m" + i + tempVariable.get(j).getVariableName() + ".setOnClickListener(this);");
+					sb.append("m" + i + tempVariable.get(j).getVariableName() + ".setOnClickListener(this);\n");
 				}
 			}
 		}
@@ -239,7 +263,8 @@ public class GetWidgetByXmlParser
 	public List<String> getTargetFileMethodList(String targetFilepPath, String codingType) throws Exception
 	{
 		String result = CommonMethod.fileToString(targetFilepPath, codingType);
-
+		listMethod = new ArrayList<String>();
+		
 		// 根据指定规则提取目标文件方法列表
 		Pattern pattern = Pattern.compile("([public|private|protected]*\\s+[\\w]+\\s+[\\w]+\\([^)]*\\)\\s*\\{)");
 		Matcher matcher = pattern.matcher(result);

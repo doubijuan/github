@@ -1,12 +1,19 @@
 package pers.edward.androidtool.ui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -29,14 +36,20 @@ public class SelectMethodListInterface extends JFrame
 	private List<RecordSelectedIndexModel> list;
 	private GetWidgetByXmlParser getWidgetByXmlParser;
 	private String activityPath, codingType;
+	private JRadioButton[] modifierRadioButton;
+	private JRadioButton[] isListenerRadioButton;
+	private List<String> listMethod;
 
 	public SelectMethodListInterface(String activityPath, String codingType, List<RecordSelectedIndexModel> list,
-			GetWidgetByXmlParser getWidgetByXmlParser)
+			GetWidgetByXmlParser getWidgetByXmlParser, JRadioButton[] modifierRadioButton, JRadioButton[] isListenerRadioButton)
 	{
 		this.codingType = codingType;
 		this.activityPath = activityPath;
 		this.getWidgetByXmlParser = getWidgetByXmlParser;
 		this.list = list;
+		this.modifierRadioButton = modifierRadioButton;
+		this.isListenerRadioButton = isListenerRadioButton;
+		listMethod = new ArrayList<String>();
 
 		setLayout(null);
 		setVisible(true);
@@ -80,8 +93,9 @@ public class SelectMethodListInterface extends JFrame
 
 	public void init() throws Exception
 	{
-		List<String> listMethod = getWidgetByXmlParser.getTargetFileMethodList(activityPath, codingType);
-		generateTree(listMethod);
+		listMethod = getWidgetByXmlParser.getTargetFileMethodList(activityPath, codingType);
+
+		generateSelectMethod(listMethod);
 	}
 
 	/**
@@ -89,30 +103,42 @@ public class SelectMethodListInterface extends JFrame
 	 * 
 	 * @param listMethod
 	 */
-	public void generateTree(List<String> listMethod)
+	public void generateSelectMethod(List<String> listMethod)
 	{
+		JTextArea area = new JTextArea();
+		ButtonGroup bg = new ButtonGroup();
 
-		JTree tree = new JTree();
-		CheckBoxTreeNode rootNode = new CheckBoxTreeNode("全选");
+		JRadioButton[] methodRadioButton = new JRadioButton[listMethod.size()];
+
+		area.setPreferredSize(new Dimension(350, listMethod.size() * 25 + 10));
 		for (int i = 0; i < listMethod.size(); i++)
 		{
+			JRadioButton jb = new JRadioButton();
 			String methodName = listMethod.get(i);
-			CheckBoxTreeNode childNode = new CheckBoxTreeNode(methodName.substring(0, methodName.length() - 1));
-			rootNode.add(childNode);
-		}
-		DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
-		tree.addMouseListener(new CheckBoxTreeNodeSelectionListener());
-		tree.setModel(treeModel);
-		// 用来绘制checkbox
-		tree.setCellRenderer(new CheckBoxTreeCellRenderer());
+			jb.setText(methodName.substring(0, methodName.length() - 1));
+			jb.setFont(new Font("", 1, 16));
+			jb.setBackground(Color.white);
+			jb.setBounds(10, 10 + i * 25, 500, 30);
+			methodRadioButton[i] = jb;
 
-		JScrollPane scroll = new JScrollPane(tree);
+			if (i == 0)
+			{
+				jb.setSelected(true);
+			}
+
+			area.add(jb);
+			bg.add(jb);
+		}
+		JScrollPane scroll = new JScrollPane(area);
+		scroll.setEnabled(false);
 		scroll.setBounds(0, 0, 700, 500);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		add(scroll);
 
 		JButton button = new JButton("确定");
 		button.setBounds(10, 520, 150, 30);
-		button.addActionListener(new ClickListener(treeModel, listMethod));
+		button.addActionListener(new ClickListener(listMethod, methodRadioButton));
 		add(button);
 
 	}
@@ -126,37 +152,64 @@ public class SelectMethodListInterface extends JFrame
 	public class ClickListener implements ActionListener
 	{
 		private List<String> listMethod;
-		private DefaultTreeModel model;
+		private JRadioButton[] methodRdaioButton;
 
-		public ClickListener(DefaultTreeModel model, List<String> listMethod)
+		public ClickListener(List<String> listMethod, JRadioButton[] methodRdaioButton)
 		{
+			this.methodRdaioButton = methodRdaioButton;
 			this.listMethod = listMethod;
-			this.model = model;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
 			// TODO Auto-generated method stub
-
 			String selectedMethodName = null;
 
-			CheckBoxTreeNode node = (CheckBoxTreeNode) model.getRoot();
-			for (int i = 0; i < node.getChildCount(); i++)
+			for (int i = 0; i < methodRdaioButton.length; i++)
 			{
-				CheckBoxTreeNode childNode = (CheckBoxTreeNode) node.getChildAt(i);
-				if (childNode.isSelected)
+				if (methodRdaioButton[i].isSelected())
 				{
 					selectedMethodName = listMethod.get(i);
 				}
+
 			}
 
-			// 根据前一个页面选中的值
+			// // 根据前一个页面选中的值
 			try
 			{
-				getWidgetByXmlParser.generateStatementAndBindviewVariable(activityPath, selectedMethodName, list, codingType, "private", true);
+				String modifierVariable = "";
+				for (int i = 0; i < modifierRadioButton.length; i++)
+				{
+					if (modifierRadioButton[i].isSelected())
+					{
+						modifierVariable = modifierRadioButton[i].getText();
+					}
+				}
+
+				// 默认为添加监听事件
+				boolean isListener = true;
+				for (int i = 0; i < isListenerRadioButton.length; i++)
+				{
+					if (isListenerRadioButton[i].isSelected())
+						if (isListenerRadioButton[i].getText().equals("是"))
+						{
+							isListener = true;
+
+						} else
+						{
+							isListener = false;
+						}
+
+				}
+				getWidgetByXmlParser.generateStatementAndBindviewVariable(activityPath, selectedMethodName, list, codingType, modifierVariable,
+						isListener);
+				common.showMessage("生成控件成功！");
+				// 关闭当前界面
+				dispose();
 			} catch (Exception e)
 			{
+				common.showErrorMessage("生成控件失败！");
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -164,16 +217,18 @@ public class SelectMethodListInterface extends JFrame
 		}
 	}
 
-	public static SelectMethodListInterface getInstance(String activityPath, String codingType, List<RecordSelectedIndexModel> list,
-			GetWidgetByXmlParser getWidgetByXmlParser)
-	{
-
-		if (instance == null)
-		{
-			instance = new SelectMethodListInterface(activityPath, codingType, list, getWidgetByXmlParser);
-		}
-
-		return instance;
-	}
+	// public static SelectMethodListInterface getInstance(String activityPath,
+	// String codingType, List<RecordSelectedIndexModel> list,
+	// GetWidgetByXmlParser getWidgetByXmlParser)
+	// {
+	//
+	// if (instance == null)
+	// {
+	// instance = new SelectMethodListInterface(activityPath, codingType, list,
+	// getWidgetByXmlParser);
+	// }
+	//
+	// return instance;
+	// }
 
 }
