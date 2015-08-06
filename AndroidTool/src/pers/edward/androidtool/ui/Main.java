@@ -1,18 +1,17 @@
 package pers.edward.androidtool.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 
-import javax.naming.Context;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,11 +36,12 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	private JTabbedPane tabbedPane = null;
 	private String[] tabName = { "主界面", "生成控件", "生成Model", "生成URL接口", "生成Activity" };
 	private JPanel[] mJpanel;
-	private JLabel label, label1, label2, label3, label4, label5, label6, label7, label8, label9, label10, label11;
-	private JTextField field, field1, field2, field3, field4, field5, field6, field7, field8, field9, field10, field11;
-	private JButton button1, button2, button3, button4, button5, button6, button7, button8, button9;
+	private JLabel label, label1, label2, label3, label9, label10, label11;
+	private JTextField field, field1, field2, field3, field6;
+	private JButton button1, button2;
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private FileAlterationMonitor monitor = null;
+	private JComboBox<String> box;
 	private CommonMethod common = new CommonMethod(getContentPane());
 
 	public Main() throws Exception
@@ -72,7 +72,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		setJPanelOneLayout(mJpanel[0]);
 		generateWidgetInterface = new GenerateWidgetInterface(mJpanel[1], getContentPane(), this);
 		GenerateModelInterface.getInstanceModel(mJpanel[2], getContentPane(), this);
-		GenerateUrlInterface.getInstanceInterface(mJpanel[3], getContentPane(), field5.getText().toString());
+		GenerateUrlInterface.getInstanceInterface(mJpanel[3], getContentPane(), box.getSelectedItem().toString());
 		GenerateActivityInterface.getInstance(mJpanel[4], getContentPane(), field.getText().toString());
 
 		container.add(tabbedPane, BorderLayout.CENTER);
@@ -93,14 +93,14 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		return field2;
 	}
 
-	public JTextField getField5()
+	public JComboBox<String> getBox()
 	{
-		return field5;
+		return box;
 	}
 
-	public void setField5(JTextField field5)
+	public void setBox(JComboBox<String> box)
 	{
-		this.field5 = field5;
+		this.box = box;
 	}
 
 	public String getActivityPathStrStr()
@@ -153,7 +153,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		label3.setBounds(10, 120, 200, 50);
 		jpanel.add(label3);
 
-		label9 = new JLabel("输入编码方式：");
+		label9 = new JLabel("选择编码类型：");
 		label9.setBounds(350, 120, 200, 50);
 		jpanel.add(label9);
 
@@ -161,9 +161,14 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		label10.setBounds(10, 290, 100, 50);
 		jpanel.add(label10);
 
-		field5 = new JTextField("utf-8");
-		field5.setBounds(450, 130, 100, 30);
-		jpanel.add(field5);
+		// 下拉列表
+		box = new JComboBox<String>();
+		box.addItem("gbk");
+		box.addItem("utf-8");
+		box.addItem("ISO-8859-1");
+		box.setBackground(Color.white);
+		box.setBounds(450, 130, 100, 30);
+		jpanel.add(box);
 
 		field = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\src\\cn\\zhanyun\\n18client");
 		field.setBounds(170, 10, 600, 30);
@@ -277,7 +282,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 			try
 			{
 				GetGenerateModel model = new GetGenerateModel();
-				model.test(label11.getText().toString(), field2.getText().toString(), field6.getText().toString(), field5.getText().toString());
+				model.test(label11.getText().toString(), field2.getText().toString(), field6.getText().toString(), box.getSelectedItem().toString());
 
 				common.showMessage("生成文件成功！");
 			} catch (Exception e)
@@ -333,8 +338,8 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		field1.setEditable(false);
 		field2.setEditable(false);
 		field3.setEditable(false);
-		field5.setEditable(false);
 		button1.setEnabled(false);
+		generateWidgetInterface.getButton3().setEnabled(true);
 		button2.setEnabled(true);
 	}
 
@@ -347,8 +352,8 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		field1.setEditable(true);
 		field2.setEditable(true);
 		field3.setEditable(true);
-		field5.setEditable(true);
 		button1.setEnabled(true);
+		generateWidgetInterface.getButton3().setEnabled(false);
 		button2.setEnabled(false);
 	}
 

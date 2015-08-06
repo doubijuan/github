@@ -68,7 +68,7 @@ public class GenerateModelInterface
 		jpanel.add(button4);
 
 		label11 = new JLabel();
-		label11.setFont(new Font("Dialog", 1, 20));
+		label11.setFont(new Font("Dialog", 1, 16));
 		label11.setForeground(Color.red);
 		label11.setBounds(150, 10, 500, 30);
 		jpanel.add(label11);
@@ -93,8 +93,8 @@ public class GenerateModelInterface
 				GetGenerateModel model = new GetGenerateModel();
 				try
 				{
-					model.test(label11.getText().toString(), main.getField2().getText().toString(), field6.getText().toString(), main.getField5()
-							.getText().toString());
+					model.test(label11.getText().toString(), main.getField2().getText().toString(), field6.getText().toString(), main.getBox()
+							.getSelectedItem().toString());
 				} catch (Exception e)
 				{
 					// TODO Auto-generated catch block

@@ -12,11 +12,8 @@ import pers.edward.androidtool.tool.CommonMethod;
 /**
  * 自动生成字段
  * 
- * @author Edward DisplaySearchHotelModel
+ * @author Edward 
  * 
- *         导致错误的数据 "_imageurl":
- *         "/Upload/Shop/Images/Product/20150723/201507231458423648003.jpg,/Upload/Shop/Images/Product/20150723/201507231612457422028.jpg"
- *         , "_addeddate": "/Date(1437633478000+0800)/",
  */
 public class GetGenerateModel
 {

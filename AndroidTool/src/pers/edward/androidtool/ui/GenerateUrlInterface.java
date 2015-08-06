@@ -90,7 +90,10 @@ public class GenerateUrlInterface
 				// TODO Auto-generated method stub
 				try
 				{
-					SelectUrlInterface.getInstance(field7.getText().toString(), field8.getText().toString(), field9.getText().toString(), codingType);
+					new SelectUrlInterface(field7.getText().toString(), field8.getText().toString(), field9.getText().toString(), codingType);
+					// SelectUrlInterface.getInstance(field7.getText().toString(),
+					// field8.getText().toString(), field9.getText().toString(),
+					// codingType);
 				} catch (Exception e)
 				{
 					// TODO Auto-generated catch block

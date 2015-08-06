@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import pers.edward.androidtool.function.getUrlInterface;
 import pers.edward.androidtool.model.NetworkUrlModel;
@@ -38,7 +39,7 @@ public class SelectUrlInterface extends JFrame
 	private String codingType;
 	private static SelectUrlInterface instance = null;
 
-	private SelectUrlInterface(String domainNameAndPortConstant, String targetFilePath, String domainNameAndPort, String codingType) throws Exception
+	public SelectUrlInterface(String domainNameAndPortConstant, String targetFilePath, String domainNameAndPort, String codingType) throws Exception
 	{
 		this.domainNameAndPort = domainNameAndPort;
 		this.domainNameAndPortConstant = domainNameAndPortConstant;
@@ -74,17 +75,17 @@ public class SelectUrlInterface extends JFrame
 	 * 
 	 * @throws Exception
 	 */
-	public static SelectUrlInterface getInstance(String domainNameAndPortConstant, String targetFilePath, String domainNameAndPort, String codingType)
-			throws Exception
-	{
-
-		if (instance == null)
-		{
-			instance = new SelectUrlInterface(domainNameAndPortConstant, targetFilePath, domainNameAndPort, codingType);
-		}
-
-		return instance;
-	}
+//	public static SelectUrlInterface getInstance(String domainNameAndPortConstant, String targetFilePath, String domainNameAndPort, String codingType)
+//			throws Exception
+//	{
+//
+//		if (instance == null)
+//		{
+//			instance = new SelectUrlInterface(domainNameAndPortConstant, targetFilePath, domainNameAndPort, codingType);
+//		}
+//
+//		return instance;
+//	}
 
 	public void init() throws Exception
 	{
@@ -122,7 +123,7 @@ public class SelectUrlInterface extends JFrame
 		tree.setModel(treeModel);
 		// ”√¿¥ªÊ÷∆checkbox
 		tree.setCellRenderer(new CheckBoxTreeCellRenderer());
-
+		CommonMethod.expandAll(tree, new TreePath(tree.getModel().getRoot()), true);
 		JScrollPane scroll = new JScrollPane(tree);
 		scroll.setBounds(0, 0, 700, 500);
 		add(scroll);

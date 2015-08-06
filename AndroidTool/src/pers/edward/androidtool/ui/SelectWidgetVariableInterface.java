@@ -1,11 +1,10 @@
 package pers.edward.androidtool.ui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -15,6 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import pers.edward.androidtool.function.GetWidgetByXmlParser;
 import pers.edward.androidtool.model.FileLayoutVariableModel;
@@ -83,9 +84,16 @@ public class SelectWidgetVariableInterface extends JFrame
 			File file = new File(getTreeList.get(i).getFileName());
 			CheckBoxTreeNode subTree = new CheckBoxTreeNode(file.getName() + "   路径：" + file.getPath());
 			List<VariableDataModel> subList = getTreeList.get(i).getVariableList();
+
 			for (int j = 0; j < subList.size(); j++)
 			{
-				CheckBoxTreeNode subTreeList = new CheckBoxTreeNode(subList.get(j).getVariableType() + "    " + subList.get(j).getVariableName());
+				String temp = subList.get(j).getVariableType();
+				int tempIndex = temp.lastIndexOf(".");
+				if (tempIndex != -1)
+				{
+					temp = temp.substring(tempIndex + 1, temp.length());
+				}
+				CheckBoxTreeNode subTreeList = new CheckBoxTreeNode("类型：" + temp + "              名称：" + subList.get(j).getVariableName());
 				subTree.add(subTreeList);
 			}
 			rootNode.add(subTree);
@@ -93,9 +101,10 @@ public class SelectWidgetVariableInterface extends JFrame
 		DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 		tree.addMouseListener(new CheckBoxTreeNodeSelectionListener());
 		tree.setModel(treeModel);
+		//展开一棵树
+		CommonMethod.expandAll(tree, new TreePath(tree.getModel().getRoot()), true);
 		// 用来绘制checkbox
 		tree.setCellRenderer(new CheckBoxTreeCellRenderer());
-
 		JScrollPane scroll = new JScrollPane(tree);
 		scroll.setBounds(0, 0, 700, 500);
 		add(scroll);
@@ -105,6 +114,8 @@ public class SelectWidgetVariableInterface extends JFrame
 		button.addActionListener(new ClickListener(treeModel));
 		add(button);
 	}
+
+	
 
 	/**
 	 * 点击确定事件
@@ -155,7 +166,7 @@ public class SelectWidgetVariableInterface extends JFrame
 				if (isChoose)
 				{
 					new SelectMethodListInterface(activityPath, codingType, list, getWidgetByXmlParser, modifierRadioButton, isListenerRadioButton);
-				
+
 				} else
 				{
 					common.showErrorMessage("请选择数据！");

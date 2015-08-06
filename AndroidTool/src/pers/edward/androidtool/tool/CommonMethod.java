@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
+import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +21,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTree;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import cpdetector.io.ASCIIDetector;
 import cpdetector.io.CodepageDetectorProxy;
@@ -360,5 +364,40 @@ public class CommonMethod
 		int screenWidth = screenSize.width; // 获取屏幕的宽
 		int screenHeight = screenSize.height; // 获取屏幕的高
 		frame.setLocation(screenWidth / 2 - windowWidth / 2, screenHeight / 2 - windowHeight / 2);
+	}
+
+	/**
+	 * 将一个树展开
+	 * 
+	 * @param tree
+	 * 
+	 * @param parent
+	 * 
+	 * @param expand
+	 * 
+	 */
+	@SuppressWarnings("unused")
+	public static void expandAll(JTree tree, TreePath parent, boolean expand)
+	{
+		// Traverse children
+		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		if (node.getChildCount() >= 0)
+		{
+			for (Enumeration<?> e = node.children(); e.hasMoreElements();)
+			{
+				TreeNode n = (TreeNode) e.nextElement();
+				TreePath path = parent.pathByAddingChild(n);
+				expandAll(tree, path, expand);
+			}
+		}
+
+		// Expansion or collapse must be done bottom-up
+		if (expand)
+		{
+			tree.expandPath(parent);
+		} else
+		{
+			tree.collapsePath(parent);
+		}
 	}
 }

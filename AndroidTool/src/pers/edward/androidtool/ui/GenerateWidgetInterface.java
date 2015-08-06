@@ -82,6 +82,16 @@ public class GenerateWidgetInterface
 		this.xmlPathStr = xmlPathStr;
 	}
 
+	public JButton getButton3()
+	{
+		return button3;
+	}
+
+	public void setButton3(JButton button3)
+	{
+		this.button3 = button3;
+	}
+
 	public GenerateWidgetInterface(JPanel jpanel, Container container, Main main)
 	{
 		this.main = main;
@@ -109,14 +119,14 @@ public class GenerateWidgetInterface
 		label2.setBounds(10, 120, 200, 50);
 		jpanel.add(label2);
 
-		label6 = new JLabel("暂无");
-		label6.setFont(new Font("Dialog", 1, 16));
+		label6 = new JLabel("还没有监听到变化的文件！");
+		label6.setFont(new Font("Dialog", 1, 14));
 		label6.setForeground(Color.red);
 		label6.setBounds(150, 0, 600, 50);
 		jpanel.add(label6);
 
-		label7 = new JLabel("暂无");
-		label7.setFont(new Font("Dialog", 1, 16));
+		label7 = new JLabel("还没有监听到变化的文件！");
+		label7.setFont(new Font("Dialog", 1, 14));
 		label7.setForeground(Color.red);
 		label7.setBounds(150, 40, 600, 50);
 		jpanel.add(label7);
@@ -190,6 +200,8 @@ public class GenerateWidgetInterface
 		button3 = new JButton("确定");
 		button3.setBounds(10, 180, 150, 30);
 		button3.setActionCommand("3");
+		//默认为不可点击状态
+		button3.setEnabled(false);
 		button3.addActionListener(new ActionListener()
 		{
 
@@ -199,8 +211,14 @@ public class GenerateWidgetInterface
 				// TODO Auto-generated method stub
 				try
 				{
-					new SelectWidgetVariableInterface(main.getActivityPathStrStr(), main.getXmlPathStr(), main.getField5().getText().toString(),
-							modifierRadioButton, isListenerRadioButton);
+					if (!"还没有监听到变化的文件！".equals(label6.getText()) && !"".equals(label7.getText()))
+					{
+						new SelectWidgetVariableInterface(main.getActivityPathStrStr(), main.getXmlPathStr(), main.getBox().getSelectedItem()
+								.toString(), modifierRadioButton, isListenerRadioButton);
+					} else
+					{
+						common.showErrorMessage("文件为空！");
+					}
 				} catch (Exception e)
 				{
 					// TODO Auto-generated catch block
