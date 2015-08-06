@@ -30,6 +30,7 @@ import pers.edward.androidtool.tool.CommonMethod;
 
 public class Main extends JFrame implements ActionListener, ItemListener
 {//hello
+	//EdwardÌí¼Ó
 	private static Main main;
 	private GenerateWidgetInterface generateWidgetInterface;
 	private Container container = null;
