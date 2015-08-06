@@ -41,9 +41,8 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	private JButton button1, button2;
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private FileAlterationMonitor monitor = null;
-	private JComboBox<String> box;
+	private JComboBox  box;
 	private CommonMethod common = new CommonMethod(getContentPane());
-
 	public Main() throws Exception
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,12 +92,12 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		return field2;
 	}
 
-	public JComboBox<String> getBox()
+	public JComboBox  getBox()
 	{
 		return box;
 	}
 
-	public void setBox(JComboBox<String> box)
+	public void setBox(JComboBox  box)
 	{
 		this.box = box;
 	}
@@ -162,7 +161,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		jpanel.add(label10);
 
 		// 下拉列表
-		box = new JComboBox<String>();
+		box = new JComboBox ();
 		box.addItem("gbk");
 		box.addItem("utf-8");
 		box.addItem("ISO-8859-1");
