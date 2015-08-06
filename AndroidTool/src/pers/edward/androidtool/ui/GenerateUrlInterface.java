@@ -3,18 +3,12 @@ package pers.edward.androidtool.ui;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import pers.edward.androidtool.function.getUrlInterface;
-import pers.edward.androidtool.model.NetworkUrlModel;
-import pers.edward.androidtool.model.RecordSelectedIndexModel;
-import pers.edward.androidtool.model.StoreSubInterfaceModel;
 import pers.edward.androidtool.tool.CommonMethod;
 
 /**
