@@ -29,7 +29,7 @@ import pers.edward.androidtool.interfaces.FileChangeListener.setChangeFilePath;
 import pers.edward.androidtool.tool.CommonMethod;
 
 public class Main extends JFrame implements ActionListener, ItemListener
-{
+{//hello
 	private static Main main;
 	private GenerateWidgetInterface generateWidgetInterface;
 	private Container container = null;
