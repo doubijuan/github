@@ -43,7 +43,6 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	private FileAlterationMonitor monitor = null;
 	private JComboBox  box;
 	private CommonMethod common = new CommonMethod(getContentPane());
-
 	public Main() throws Exception
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
