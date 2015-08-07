@@ -400,4 +400,61 @@ public class CommonMethod
 			tree.collapsePath(parent);
 		}
 	}
+
+	/**
+	 * 重新创建文件，删除再建一个新文件
+	 * 
+	 * @param targetString
+	 * @return
+	 */
+	public static RandomAccessFile reSetUpFile(String targetString)
+	{
+		try
+		{
+			File file = new File(targetString);
+			if (file.exists())
+			{
+				file.delete();
+				file.createNewFile();
+				return new RandomAccessFile(targetString, "rw");
+			} else
+			{
+				return null;
+			}
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 将数据写入到指定的文件中
+	 * 
+	 * @param targetFilePath
+	 * 
+	 * @param methodName
+	 * 
+	 */
+	public static void inputDataToTargetFile(String targetFilePath, String insertContent, String codingType)
+	{
+		if (targetFilePath.isEmpty() && insertContent.isEmpty() && codingType.isEmpty())
+		{
+			System.out.println("目标文件，写入内容，编码类型不能为空！");
+			return;
+		}
+
+		try
+		{
+			RandomAccessFile rf = CommonMethod.reSetUpFile(targetFilePath);
+			rf.write(insertContent.getBytes(codingType));
+			rf.close();
+		} catch (IOException e)
+		{
+			System.err.println("写入" + insertContent + "异常！！！");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

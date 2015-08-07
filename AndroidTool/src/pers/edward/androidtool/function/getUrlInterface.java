@@ -20,6 +20,7 @@ import pers.edward.androidtool.model.Model;
 import pers.edward.androidtool.model.NetworkUrlModel;
 import pers.edward.androidtool.model.RecordSelectedIndexModel;
 import pers.edward.androidtool.model.StoreSubInterfaceModel;
+import pers.edward.androidtool.tool.CommonMethod;
 
 /**
  * 此程序用于自动生成安卓端的网络通讯接口
@@ -35,6 +36,8 @@ public class getUrlInterface
 	// 存储子接口地址列表
 	private List<StoreSubInterfaceModel> storeSubInterfaceList = new ArrayList<StoreSubInterfaceModel>();
 
+	private String newDomainNameAndPort;
+
 	public List<StoreSubInterfaceModel> getStoreSubInterfaceList()
 	{
 		return storeSubInterfaceList;
@@ -45,16 +48,27 @@ public class getUrlInterface
 
 		getUrlInterface main = new getUrlInterface();
 		// 酒店接口地址
-		// String temp = "http://120.25.218.242:9505/index.aspx";
+		String temp = "http://120.25.218.242:9505/index.aspx";
 		// 云易购
-		String temp = "http://120.25.218.242:9012/";
+		// String temp = "http://120.25.218.242:9012/";
 		main.test(temp, "C:\\MyWorkspace\\JAVASE\\MyExercise\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java", "INTERNET_URL",
 				"gbk");
 
-		// System.out.println(main
-		// .jointUrlAddress("GetObligationOrederlList",
-		// "http://120.25.218.242:9012/api/Order/GetAllOrderByUserID",
-		// "http://120.25.218.242:9012", "INTERNET_URL"));
+		// String result = CommonMethod.fileToString(
+		// "C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java",
+		// "gbk");
+		//
+		// Pattern pattern = Pattern.compile("([\\s\\S]*)(\\s*})");
+		// Matcher matcher = pattern.matcher(result);
+		// StringBuffer sb = new StringBuffer();
+		// if (matcher.find())
+		// {
+		// sb.append(matcher.group(1));
+		// sb.append("----------------------------------------->\n");
+		// sb.append(matcher.group(2));
+		// }
+		//
+		// System.out.println(sb.toString());
 	}
 
 	/**
@@ -73,17 +87,17 @@ public class getUrlInterface
 
 		Pattern pattern = Pattern.compile("http://\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}:\\d{4}");
 		Matcher matcher1 = pattern.matcher(interfaceAddressUrl);
-		String domainNameAndPort = null;
+		String newDomainNameAndPort = null;
 		// 判断子接口是否带类似http://123.123.123.123:9999
 		if (matcher1.find())
 		{
 			System.err.println("总地址IP：" + matcher1.group());
 			// 解析出IP地址
-			domainNameAndPort = matcher1.group();
+			this.newDomainNameAndPort = newDomainNameAndPort = matcher1.group();
 		}
 
 		// 获取网络接口URL解析字符串
-		parserNetworkUrl(interfaceAddressUrl, domainNameAndPort);
+		parserNetworkUrl(interfaceAddressUrl, newDomainNameAndPort);
 
 	}
 
@@ -129,47 +143,58 @@ public class getUrlInterface
 			String domainNameAndPort, String condingType) throws Exception
 	{
 		StringBuffer sb = new StringBuffer();
+		String result = CommonMethod.fileToString(targetFilePath, condingType);
 
-		for (int i = 0; i < list.size(); i++)
+		Pattern pattern = Pattern.compile("([\\s\\S]*)(\\s*})");
+		Matcher matcher = pattern.matcher(result);
+		if (matcher.find())
 		{
-			RecordSelectedIndexModel model = list.get(i);
-			String temp = storeSubInterfaceList.get(model.getIndex()).getInterfaceTitle();
-			System.err.println(temp);
-			List<NetworkUrlModel> networkList = storeSubInterfaceList.get(model.getIndex()).getNetworkUrlList();
-			List<Integer> listTemp = model.getSubListIndex();
-			for (int j = 0; j < listTemp.size(); j++)
+			sb.append(matcher.group(1));
+
+			for (int i = 0; i < list.size(); i++)
 			{
-				NetworkUrlModel tempModel = networkList.get(listTemp.get(j));
+				RecordSelectedIndexModel model = list.get(i);
+				String temp = storeSubInterfaceList.get(model.getIndex()).getInterfaceTitle();
+				System.err.println(temp);
+				List<NetworkUrlModel> networkList = storeSubInterfaceList.get(model.getIndex()).getNetworkUrlList();
+				List<Integer> listTemp = model.getSubListIndex();
+				for (int j = 0; j < listTemp.size(); j++)
+				{
+					NetworkUrlModel tempModel = networkList.get(listTemp.get(j));
 
-				// System.out.println("/**");
-				// System.out.println(" *Android代码自动生成器");
-				// System.out.println(" *");
-				// System.out.println(" *接口地址：" + tempModel.getUrlAddress());
-				// System.out.println(" *");
-				// System.out.println(" *请求方式：" + tempModel.getUrlRequestWay());
-				// System.out.println(" *");
-				// System.out.println(" *接口描述：" + tempModel.getUrlDescribe());
-				// System.out.println(" */");
-				// System.out.println(newUrl);
+					// System.out.println("/**");
+					// System.out.println(" *Android代码自动生成器");
+					// System.out.println(" *");
+					// System.out.println(" *接口地址：" +
+					// tempModel.getUrlAddress());
+					// System.out.println(" *");
+					// System.out.println(" *请求方式：" +
+					// tempModel.getUrlRequestWay());
+					// System.out.println(" *");
+					// System.out.println(" *接口描述：" +
+					// tempModel.getUrlDescribe());
+					// System.out.println(" */");
+					// System.out.println(newUrl);
 
-				sb.append("/**\n");
-				sb.append(" *Android代码自动生成器\n");
-				sb.append(" *\n");
-				sb.append(" *接口地址：" + tempModel.getUrlAddress() + "\n");
-				sb.append(" *\n");
-				sb.append(" *请求方式：" + tempModel.getUrlRequestWay() + "\n");
-				sb.append(" *\n");
-				sb.append(" *接口描述：" + tempModel.getUrlDescribe() + "\n");
-				sb.append(" */\n");
-				// 拼接地址
-				String newUrl = jointUrlAddress(tempModel.getUrlName(), tempModel.getUrlAddress(), domainNameAndPortConstant, domainNameAndPort);
-				sb.append(newUrl + "\n\n");
+					sb.append("/**\n");
+					sb.append(" *Android代码自动生成器\n");
+					sb.append(" *\n");
+					sb.append(" *接口地址：" + tempModel.getUrlAddress() + "\n");
+					sb.append(" *\n");
+					sb.append(" *请求方式：" + tempModel.getUrlRequestWay() + "\n");
+					sb.append(" *\n");
+					sb.append(" *接口描述：" + tempModel.getUrlDescribe() + "\n");
+					sb.append(" */\n");
+					// 拼接地址
+					String newUrl = jointUrlAddress(tempModel.getUrlName(), tempModel.getUrlAddress(), domainNameAndPortConstant, domainNameAndPort);
+					sb.append(newUrl + "\n\n");
+				}
 			}
+			sb.append(matcher.group(2));
 		}
-		
-		//将接口数据写入目标文件
-		inputStreamToFile(targetFilePath, sb.toString(), condingType);
-		
+		// 将接口数据写入目标文件
+		CommonMethod.inputDataToTargetFile(targetFilePath, sb.toString(), condingType);
+
 	}
 
 	/**
@@ -210,19 +235,26 @@ public class getUrlInterface
 		String tempString = null;
 		// 处理地址名称
 		addressName = dealwithAddressName(addressName);
+		System.out.println("处理后的地址名称：" + addressName);
+
+		int tempIndex = address.indexOf(newDomainNameAndPort);
+		// System.out.println(domainNameAndPort + "               " +
+		// domainNameAndPortConstant + "               " + address);
 
 		// 替换地址常量
-		if (address.indexOf(domainNameAndPortConstant) != -1)
+		if (tempIndex != -1)
 		{
-			address = address.replace(domainNameAndPortConstant, domainNameAndPort + "+\"/");
+			address = address.replace(newDomainNameAndPort, domainNameAndPort + "+\"/");
+			// 生成接口地址
+			tempString = "public static String " + addressName + "=" + address + "\";";
 		} else
 		{
+			// 生成接口地址
+			tempString = "public static String " + addressName + "=\"" + address + "\";";
 			System.err.println("访问地址替换出错！");
 		}
 
-		// 生成接口地址
-		tempString = "public static String " + addressName + "=" + address + "\";";
-
+		System.out.println("生成接口地址：" + tempString);
 		return tempString;
 	}
 
@@ -283,14 +315,14 @@ public class getUrlInterface
 	 * 
 	 * @param url
 	 * 
-	 * @param domainNameAndPort
+	 * @param newDomainNameAndPort
 	 * 
 	 * @throws Exception
 	 */
-	public void parserNetworkUrl(String url, String domainNameAndPort) throws Exception
+	public void parserNetworkUrl(String url, String newDomainNameAndPort) throws Exception
 	{
 		// 获取总接口地址(设置10秒延时，避免timeout异常)
-		Document docResult = Jsoup.connect(url).timeout(10*1000).get();
+		Document docResult = Jsoup.connect(url).timeout(10 * 1000).get();
 		String string = docResult.toString();
 		// System.err.println(string);
 		// 匹配每个子接口的地址
@@ -307,7 +339,7 @@ public class getUrlInterface
 
 			Pattern.compile("http://\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}:\\d{4}");
 			Matcher matcher1 = pattern.matcher(getSuffixUrlString);
-			// 判断子接口是否含有前缀域名和端口http://123.123.123.123:9999
+			// 判断子接口是否含有前缀域名和端口号http://123.123.123.123:9999
 			StoreSubInterfaceModel model = new StoreSubInterfaceModel();
 			if (matcher1.find())
 			{
@@ -318,11 +350,11 @@ public class getUrlInterface
 				model.setNetworkUrlList(null);
 			} else
 			{
-				System.err.println("子接口地址：" + domainNameAndPort + "/" + getSuffixUrlString);
-				model.setInterfaceUrl(domainNameAndPort + "/" + getSuffixUrlString);
+				System.err.println("子接口地址：" + newDomainNameAndPort + "/" + getSuffixUrlString);
+				model.setInterfaceUrl(newDomainNameAndPort + "/" + getSuffixUrlString);
 				model.setInterfaceTitle(getInterfaceTitle);
 				// 解析网络子接口的数据
-				parserSubNetworkUrlData(domainNameAndPort, domainNameAndPort + "/" + getSuffixUrlString, model);
+				parserSubNetworkUrlData(newDomainNameAndPort, newDomainNameAndPort + "/" + getSuffixUrlString, model);
 			}
 			storeSubInterfaceList.add(model);
 		}
