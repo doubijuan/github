@@ -44,6 +44,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	private FileAlterationMonitor monitor = null;
 	private JComboBox  box;
 	private CommonMethod common = new CommonMethod(getContentPane());
+	
 	public Main() throws Exception
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -161,7 +162,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		label10.setBounds(10, 290, 100, 50);
 		jpanel.add(label10);
 
-		// 下拉列表
+		// 下拉列表（为了能够兼容JDK1.6版本，此处JComboBox不添加<String>）
 		box = new JComboBox ();
 		box.addItem("gbk");
 		box.addItem("utf-8");

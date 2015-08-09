@@ -2,7 +2,6 @@ package pers.edward.androidtool.function;
 
 import java.io.File;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +11,7 @@ import pers.edward.androidtool.tool.CommonMethod;
 /**
  * 自动生成字段
  * 
- * @author Edward 
+ * @author Edward
  * 
  */
 public class GetGenerateModel
@@ -24,19 +23,19 @@ public class GetGenerateModel
 	{
 
 		GetGenerateModel model = new GetGenerateModel();
-		model.test("F:\\GetAllOrderByUserID.json", "C:\\MyWorkspace\\Android\\YunYiPurchase\\YunYiGou\\src\\com\\zhanyun\\yunyigou\\model", "Test2",
-				"utf-8");
+		model.test("F:\\bb.json", "C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\model", "Test", "utf-8");
 	}
 
-	public void test(String parseFileName, String genertaeFilePath, String fileName, String encodingType) throws Exception
+	public void test(String parseFileNamePath, String genertaeFilePath, String fileName, String encodingType) throws Exception
 	{
-		String temp = parseFileName.substring(parseFileName.length() - 4, parseFileName.length());
+		String temp = parseFileNamePath.substring(parseFileNamePath.length() - 4, parseFileNamePath.length());
 		// 判断输入的文件是否有.json后缀
 		if (!temp.equals("json"))
 		{
-			parseFileName += ".json";
+			parseFileNamePath += ".json";
 		}
-		System.err.println("解析文件名：" + parseFileName);
+
+		System.err.println("解析文件名：" + parseFileNamePath);
 
 		// 生成文件路径
 		String packageName = genertaeFilePath.substring(genertaeFilePath.lastIndexOf("\\src\\") + 5, genertaeFilePath.length());
@@ -44,7 +43,32 @@ public class GetGenerateModel
 		packageName = packageName.replace("\\", ".");
 		System.err.println("程序包名：" + packageName);
 
-		// 判断是否有后缀Model
+		// 得到文件名
+		fileName = isModel(temp, fileName);
+
+		// System.out.println(string);
+		String modelFilePath = genertaeFilePath + "\\" + fileName + ".java";
+		System.err.println("Model文件路径：" + modelFilePath);
+
+		String string = CommonMethod.fileToString(parseFileNamePath, encodingType);
+		List<String> list = parserJsonFile(string);
+
+		// geterateDomainNameData(list, modelFilePath, fileName, packageName,
+		// encodingType);
+	}
+
+	/**
+	 * 判断是否有后缀Model
+	 * 
+	 * @param temp
+	 * 
+	 * @param fileName
+	 * 
+	 * @return
+	 */
+	public String isModel(String temp, String fileName)
+	{
+
 		if (fileName.length() <= 4)
 		{
 			fileName += "Model";
@@ -58,20 +82,14 @@ public class GetGenerateModel
 		}
 		System.err.println("Model文件名：" + fileName);
 
-		String string = CommonMethod.fileToString(parseFileName);
-		// System.out.println(string);
-		String modelFilePath = genertaeFilePath + "\\" + fileName + ".java";
-		System.err.println("Model文件路径：" + modelFilePath);
-
-		List<String> list = parserJsonFile(string);
-
-		geterateDomainNameData(list, modelFilePath, fileName, packageName, encodingType);
+		return fileName;
 	}
 
 	/**
 	 * 生成域名数据
 	 * 
 	 * @param modelFilePath
+	 * 
 	 * @throws Exception
 	 */
 	public void geterateDomainNameData(List<String> list, String modelFilePath, String fileName, String packageName, String encodingType)
@@ -141,37 +159,56 @@ public class GetGenerateModel
 	 * 解析json文件
 	 * 
 	 * @param result
+	 * 
 	 * @return
 	 */
 	public List<String> parserJsonFile(String result)
 	{
 		// System.out.println(result);
-		//
-		// return null;
 
-		// // 判断JSON是否一个数组
-		if (result.indexOf("[") != -1)
-		{
-			isBracket = true;
-		} else
-			isBracket = false;
+		Pattern pattern = Pattern.compile("\"Result\":\\s*\\[{0,1}\\s*\\{([^\\}]*\\s*)\\},*\\s*\\]{0,1}");
+		Matcher matcher = pattern.matcher(result);
 
-		result = result.substring(result.indexOf("Result"), result.length());
-		result = result.substring(result.indexOf("{"), result.indexOf("}") + 1);
-		System.err.println("文件内容：" + result);
-
-		Pattern patten = Pattern.compile("\"([^\":]*)\":");
-
-		Matcher matcher = patten.matcher(result);
-
-		List<String> fieldNameList = new ArrayList<String>();
 		while (matcher.find())
 		{
 			System.out.println(matcher.group(1));
-			fieldNameList.add(matcher.group(1));
+			
+			
+			
+			
+			
+			
+			// System.out.println(matcher.group(1) + "         " +
+
+			// matcher.group(2));
 		}
 
-		return fieldNameList;
+		return null;
+
+		// // 判断JSON是否一个数组
+		// if (result.indexOf("[") != -1)
+		// {
+		// isBracket = true;
+		// } else
+		// isBracket = false;
+		//
+		// result = result.substring(result.indexOf("Result"), result.length());
+		// result = result.substring(result.indexOf("{"), result.indexOf("}") +
+		// 1);
+		// System.err.println("文件内容：" + result);
+		//
+		// Pattern patten = Pattern.compile("\"([^\":]*)\":");
+		//
+		// Matcher matcher = patten.matcher(result);
+		//
+		// List<String> fieldNameList = new ArrayList<String>();
+		// while (matcher.find())
+		// {
+		// System.out.println(matcher.group(1));
+		// fieldNameList.add(matcher.group(1));
+		// }
+		//
+		// return fieldNameList;
 	}
 
 }
