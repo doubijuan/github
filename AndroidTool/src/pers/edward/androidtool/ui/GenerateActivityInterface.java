@@ -7,15 +7,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import pers.edward.androidtool.function.getActivity;
+import pers.edward.androidtool.function.getUserInterface;
 import pers.edward.androidtool.tool.CommonMethod;
 
 /**
- * 生成Activity页面
+ * 生成界面UI
  * 
  * @author Edward
  * 
@@ -29,6 +30,7 @@ public class GenerateActivityInterface
 	private Container container;
 	private CommonMethod common;
 	private String activityFolderPath;
+	private JComboBox box;
 	private static GenerateActivityInterface instance = null;
 
 	public static GenerateActivityInterface getInstance(JPanel jpanel, Container container, String activityFolderPath)
@@ -63,6 +65,13 @@ public class GenerateActivityInterface
 		label18.setBounds(170, 50, 500, 30);
 		jpanel.add(label18);
 
+		box = new JComboBox();
+		box.addItem("Activity");
+		box.addItem("Fragment");
+		box.addItem("FragmentActivity");
+		box.setBounds(100, 100, 150, 30);
+		jpanel.add(box);
+
 		label17 = new JLabel("继承类：");
 		label17.setBounds(10, 100, 120, 30);
 		jpanel.add(label17);
@@ -71,7 +80,7 @@ public class GenerateActivityInterface
 		button7.setBounds(10, 10, 150, 30);
 		button7.addActionListener(new ActionListener()
 		{
-
+			
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
@@ -93,13 +102,14 @@ public class GenerateActivityInterface
 				common.fileChooice(label18, ".xml");
 			}
 		});
+		
 		jpanel.add(button8);
 
-		field10 = new JTextField("Activity");
-		field10.setBounds(100, 100, 200, 30);
-		jpanel.add(field10);
+		// field10 = new JTextField("Activity");
+		// field10.setBounds(100, 100, 200, 30);
+		// jpanel.add(field10);
 
-		button9 = new JButton("生成Activity");
+		button9 = new JButton("生成界面UI");
 		button9.setBounds(10, 200, 150, 30);
 		button9.addActionListener(new ActionListener()
 		{
@@ -109,8 +119,8 @@ public class GenerateActivityInterface
 			{
 				// TODO Auto-generated method stub
 
-				getActivity test = new getActivity();
-				test.test(field10.getText().toString(), activityFolderPath, label16.getText().toString(), label18.getText().toString());
+				getUserInterface test = new getUserInterface();
+//				test.test(field10.getText().toString(), activityFolderPath, label16.getText().toString(), label18.getText().toString());
 			}
 		});
 		jpanel.add(button9);

@@ -23,14 +23,15 @@ import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 
+import com.sun.xml.internal.ws.wsdl.writer.document.http.Address;
+
 import pers.edward.androidtool.function.GetGenerateModel;
 import pers.edward.androidtool.interfaces.FileChangeListener;
 import pers.edward.androidtool.interfaces.FileChangeListener.setChangeFilePath;
 import pers.edward.androidtool.tool.CommonMethod;
 
 public class Main extends JFrame implements ActionListener, ItemListener
-{//hello
-	//Edward添加
+{
 	private static Main main;
 	private GenerateWidgetInterface generateWidgetInterface;
 	private Container container = null;
@@ -42,9 +43,9 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	private JButton button1, button2;
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private FileAlterationMonitor monitor = null;
-	private JComboBox  box;
+	private JComboBox box;
 	private CommonMethod common = new CommonMethod(getContentPane());
-	
+
 	public Main() throws Exception
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,12 +95,12 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		return field2;
 	}
 
-	public JComboBox  getBox()
+	public JComboBox getBox()
 	{
 		return box;
 	}
 
-	public void setBox(JComboBox  box)
+	public void setBox(JComboBox box)
 	{
 		this.box = box;
 	}
@@ -131,6 +132,8 @@ public class Main extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	private JButton btnSavedConfigInfo;
+
 	/**
 	 * 设置面板一的布局
 	 * 
@@ -158,12 +161,17 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		label9.setBounds(350, 120, 200, 50);
 		jpanel.add(label9);
 
+		btnSavedConfigInfo = new JButton("保存配置信息");
+		btnSavedConfigInfo.setBounds(10, 300, 150, 30);
+		btnSavedConfigInfo.addActionListener(new SavedInfoClickListener());
+		jpanel.add(btnSavedConfigInfo);
+
 		label10 = new JLabel("作者：Edward");
-		label10.setBounds(10, 290, 100, 50);
+		label10.setBounds(700, 290, 100, 50);
 		jpanel.add(label10);
 
 		// 下拉列表（为了能够兼容JDK1.6版本，此处JComboBox不添加<String>）
-		box = new JComboBox ();
+		box = new JComboBox();
 		box.addItem("gbk");
 		box.addItem("utf-8");
 		box.addItem("ISO-8859-1");
@@ -199,6 +207,25 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		button2.addActionListener(this);
 		button2.setEnabled(false);
 		jpanel.add(button2);
+	}
+
+	/**
+	 * 保存配置信息点击事件
+	 * 
+	 * @author Edward
+	 * 
+	 */
+	public class SavedInfoClickListener implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			// TODO Auto-generated method stub
+			
+			
+		}
+
 	}
 
 	public void stop() throws Exception
