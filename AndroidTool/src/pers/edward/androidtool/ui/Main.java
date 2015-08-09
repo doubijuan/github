@@ -12,6 +12,7 @@ import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,8 +23,6 @@ import javax.swing.UIManager;
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
-
-import com.sun.xml.internal.ws.wsdl.writer.document.http.Address;
 
 import pers.edward.androidtool.function.GetGenerateModel;
 import pers.edward.androidtool.interfaces.FileChangeListener;
@@ -75,7 +74,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		generateWidgetInterface = new GenerateWidgetInterface(mJpanel[1], getContentPane(), this);
 		GenerateModelInterface.getInstanceModel(mJpanel[2], getContentPane(), this);
 		GenerateUrlInterface.getInstanceInterface(mJpanel[3], getContentPane(), box.getSelectedItem().toString());
-		GenerateActivityInterface.getInstance(mJpanel[4], getContentPane(), field.getText().toString());
+		GenerateUserInterface.getInstance(mJpanel[4], getContentPane(), this);
 
 		container.add(tabbedPane, BorderLayout.CENTER);
 	}
@@ -125,6 +124,16 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		this.xmlPathStr = xmlPathStr;
 	}
 
+	public JTextField getField()
+	{
+		return field;
+	}
+
+	public void setField(JTextField field)
+	{
+		this.field = field;
+	}
+
 	@Override
 	public void itemStateChanged(ItemEvent arg0)
 	{
@@ -152,6 +161,15 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		label2 = new JLabel("输入model文件夹路径：");
 		label2.setBounds(10, 80, 200, 50);
 		jpanel.add(label2);
+
+		JButton button = new JButton("选择项目文件夹");
+		button.setBounds(10, 180, 150, 30);
+		button.addActionListener(new SelectProjectPath());
+		jpanel.add(button);
+
+		JLabel label4 = new JLabel("项目路径");
+		label4.setBounds(170, 180, 600, 30);
+		jpanel.add(label4);
 
 		label3 = new JLabel("监听时间间隔设置：");
 		label3.setBounds(10, 120, 200, 50);
@@ -196,17 +214,39 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		jpanel.add(field3);
 
 		button1 = new JButton("开始监听");
-		button1.setBounds(10, 180, 150, 30);
+		button1.setBounds(10, 250, 150, 30);
 		button1.setActionCommand("1");
 		button1.addActionListener(this);
 		jpanel.add(button1);
 
 		button2 = new JButton("停止监听");
-		button2.setBounds(210, 180, 150, 30);
+		button2.setBounds(210, 250, 150, 30);
 		button2.setActionCommand("2");
 		button2.addActionListener(this);
 		button2.setEnabled(false);
 		jpanel.add(button2);
+	}
+
+	/**
+	 * 选择项目路径
+	 * 
+	 * @author Edward
+	 * 
+	 */
+	public class SelectProjectPath implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			// TODO Auto-generated method stub
+			JFileChooser jFileChooser = new JFileChooser();
+			jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			if (JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(null))
+			{
+				System.out.println("项目路径"+jFileChooser.getSelectedFile().getPath());
+			}
+		}
 	}
 
 	/**
@@ -222,8 +262,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		public void actionPerformed(ActionEvent arg0)
 		{
 			// TODO Auto-generated method stub
-			
-			
+
 		}
 
 	}

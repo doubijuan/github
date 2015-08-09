@@ -19,16 +19,6 @@ import pers.edward.androidtool.tool.CommonMethod;
  */
 public class getUserInterface
 {
-	// 根据路径解析出包名路径
-	private String packageNamePath;
-	// 使用XML文件名作为java文件名
-	private String activityName;
-	// 生成java文件路径
-	private String generateActivityPath;
-	// 写入文件的编码类型
-	private String encodingType = "gbk";
-	// 根据文件夹路径，拼接配置文件路径
-	private String configFileNamePath;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -40,7 +30,7 @@ public class getUserInterface
 		list.add("C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\res\\layout\\activity_ordersure.xml");
 		list.add("C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\res\\layout\\activity_product.xml");
 		// C:\\MyWorkspace\\Android\\YiHuaHotel\\YiHuaHotel\\AndroidManifest.xml
-		main.test("Activity", "C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\src\\cn\\zhanyun\\n18client", list,
+		main.test("Fragment", "C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\src\\cn\\zhanyun\\n18client", list,
 				"C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\AndroidManifest.xml", "utf-8");
 	}
 
@@ -56,12 +46,20 @@ public class getUserInterface
 	 */
 	public void test(String extendsClassStr, String activityFolderPath, List<String> xmlPathStrList, String configFilePath, String codingType)
 	{
+		// System.out.println(extendsClassStr + "    " + activityFolderPath +
+		// "     " + xmlPathStrList.get(0) + "        " + configFilePath +
+		// "       "
+		// + configFilePath);
+
 		// 创建文件
 		List<String> uiName = writeDataToFile(activityFolderPath, xmlPathStrList, extendsClassStr, codingType);
 
-		// 拼接配置信息
-		jointConfigInfo(activityFolderPath, uiName, configFilePath, codingType);
-
+		// 如果继承类是Fragment则不需求配置信息
+		if (!extendsClassStr.equals("Fragment"))
+		{
+			// 拼接配置信息
+			jointConfigInfo(activityFolderPath, uiName, configFilePath, codingType);
+		}
 	}
 
 	/**
@@ -169,7 +167,13 @@ public class getUserInterface
 			try
 			{
 				file.createNewFile();
-				jointData(file, activityFolderPath, extendsClassStr, uiName, codingType);
+				if (extendsClassStr.equals("Activity") || extendsClassStr.equals("FragmentActivity") || extendsClassStr.equals("Fragment"))
+				{
+					jointData(file, activityFolderPath, extendsClassStr, uiName, codingType);
+				} else
+				{
+
+				}
 				return true;
 			} catch (IOException e)
 			{
@@ -212,14 +216,44 @@ public class getUserInterface
 		String packageNamePath = getPackageNamePath(activityFolderPath);
 
 		StringBuffer content = new StringBuffer();
+		// 插入包名
 		content.append("package " + packageNamePath + ";\n\n");
-		content.append("import android.app.Activity;\n");
-		content.append("import android.os.Bundle;\n\n");
+
+		// 导入包
+		content.append("import android.os.Bundle;\n");
+		if (extendsClassStr.equals("Activity"))
+			content.append("import android.app.Activity;\n\n");
+
+		if (extendsClassStr.equals("FragmentActivity"))
+			content.append("import android.support.v4.app.FragmentActivity;\n\n");
+
+		if (extendsClassStr.equals("Fragment"))
+		{
+			content.append("import android.support.v4.app.Fragment;\n");
+			content.append("import android.view.LayoutInflater;\n");
+			content.append("import android.view.View;\n");
+			content.append("import android.view.ViewGroup;\n\n");
+		}
+
 		content.append("public class " + uiName + " extends " + extendsClassStr + "{\n");
 		content.append("@Override\n");
-		content.append("protected void onCreate(Bundle savedInstanceState) {\n");
+		content.append("public void onCreate(Bundle savedInstanceState) {\n");
 		content.append("// TODO Auto-generated method stub\n");
-		content.append("super.onCreate(savedInstanceState);\n setContentView(R.layout." + uiName + ");\n}");
+		content.append("super.onCreate(savedInstanceState);\n");
+
+		if (!extendsClassStr.equals("Fragment"))
+			content.append("setContentView(R.layout." + uiName + ");");
+		content.append("\n}\n");
+
+		if (extendsClassStr.equals("Fragment"))
+		{
+			content.append("@Override\n");
+			content.append("public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {\n");
+			content.append("// TODO Auto-generated method stub\n");
+			content.append("return super.onCreateView(inflater, container, savedInstanceState);\n");
+			content.append("}\n");
+		}
+
 		content.append("}\n");
 
 		System.out.println("写入数据：" + content.toString());

@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,7 +23,7 @@ import pers.edward.androidtool.tool.CommonMethod;
  * @author Edward
  * 
  */
-public class GenerateActivityInterface
+public class GenerateUserInterface
 {
 	private JLabel label16, label17, label18;
 	private JTextField field10;
@@ -31,20 +33,21 @@ public class GenerateActivityInterface
 	private CommonMethod common;
 	private String activityFolderPath;
 	private JComboBox box;
-	private static GenerateActivityInterface instance = null;
+	private static GenerateUserInterface instance = null;
+	private Main main;
 
-	public static GenerateActivityInterface getInstance(JPanel jpanel, Container container, String activityFolderPath)
+	public static GenerateUserInterface getInstance(JPanel jpanel, Container container, Main main)
 	{
 		if (instance == null)
 		{
-			instance = new GenerateActivityInterface(jpanel, container, activityFolderPath);
+			instance = new GenerateUserInterface(jpanel, container, main);
 		}
 		return instance;
 	}
 
-	private GenerateActivityInterface(JPanel jpanel, Container container, String activityFolderPath)
+	private GenerateUserInterface(JPanel jpanel, Container container, Main main)
 	{
-		this.activityFolderPath = activityFolderPath;
+		this.main = main;
 		this.jpanel = jpanel;
 		this.container = container;
 		common = new CommonMethod(container);
@@ -80,7 +83,7 @@ public class GenerateActivityInterface
 		button7.setBounds(10, 10, 150, 30);
 		button7.addActionListener(new ActionListener()
 		{
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
@@ -102,7 +105,7 @@ public class GenerateActivityInterface
 				common.fileChooice(label18, ".xml");
 			}
 		});
-		
+
 		jpanel.add(button8);
 
 		// field10 = new JTextField("Activity");
@@ -119,8 +122,12 @@ public class GenerateActivityInterface
 			{
 				// TODO Auto-generated method stub
 
-				getUserInterface test = new getUserInterface();
-//				test.test(field10.getText().toString(), activityFolderPath, label16.getText().toString(), label18.getText().toString());
+				List<String> list = new ArrayList<String>();
+				list.add(label16.getText());
+
+				getUserInterface ui = new getUserInterface();
+				ui.test(box.getSelectedItem().toString(), main.getField().getText(), list, label18.getText(), main.getBox().getSelectedItem()
+						.toString());
 			}
 		});
 		jpanel.add(button9);
