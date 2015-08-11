@@ -3,12 +3,17 @@ package pers.edward.androidtool.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,13 +42,20 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	private JTabbedPane tabbedPane = null;
 	private String[] tabName = { "主界面", "生成控件", "生成Model", "生成URL接口", "生成Activity" };
 	private JPanel[] mJpanel;
-	private JLabel label, label1, label2, label3, label9, label10, label11;
+	private JLabel label, label1, label2, label3, label9, label10, label11, label4;
 	private JTextField field, field1, field2, field3, field6;
 	private JButton button1, button2;
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private FileAlterationMonitor monitor = null;
 	private JComboBox box;
 	private CommonMethod common = new CommonMethod(getContentPane());
+	private GenerateUserInterface userInterface;
+	private GenerateUrlInterface urlInterface;
+	private String configFilePath = "F:\\Android code\\android config.txt";
+	// xml文件夹根目录
+	private String layoutPath = null;
+	// 配置文件目录
+	private String androidManifestPath = null;
 
 	public Main() throws Exception
 	{
@@ -73,8 +85,11 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		setJPanelOneLayout(mJpanel[0]);
 		generateWidgetInterface = new GenerateWidgetInterface(mJpanel[1], getContentPane(), this);
 		GenerateModelInterface.getInstanceModel(mJpanel[2], getContentPane(), this);
-		GenerateUrlInterface.getInstanceInterface(mJpanel[3], getContentPane(), box.getSelectedItem().toString());
-		GenerateUserInterface.getInstance(mJpanel[4], getContentPane(), this);
+		urlInterface = new GenerateUrlInterface(mJpanel[3], getContentPane(), box.getSelectedItem().toString());
+		userInterface = new GenerateUserInterface(mJpanel[4], getContentPane(), this);
+
+		// 读取配置信息
+		readConfigInfo(configFilePath);
 
 		container.add(tabbedPane, BorderLayout.CENTER);
 	}
@@ -134,6 +149,26 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		this.field = field;
 	}
 
+	public String getLayoutPath()
+	{
+		return layoutPath;
+	}
+
+	public void setLayoutPath(String layoutPath)
+	{
+		this.layoutPath = layoutPath;
+	}
+
+	public String getAndroidManifestPath()
+	{
+		return androidManifestPath;
+	}
+
+	public void setAndroidManifestPath(String androidManifestPath)
+	{
+		this.androidManifestPath = androidManifestPath;
+	}
+
 	@Override
 	public void itemStateChanged(ItemEvent arg0)
 	{
@@ -167,7 +202,9 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		button.addActionListener(new SelectProjectPath());
 		jpanel.add(button);
 
-		JLabel label4 = new JLabel("项目路径");
+		label4 = new JLabel("请选择项目路径");
+		label4.setFont(new Font("Dialog", 1, 14));
+		label4.setForeground(Color.red);
 		label4.setBounds(170, 180, 600, 30);
 		jpanel.add(label4);
 
@@ -181,7 +218,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 
 		btnSavedConfigInfo = new JButton("保存配置信息");
 		btnSavedConfigInfo.setBounds(10, 300, 150, 30);
-		btnSavedConfigInfo.addActionListener(new SavedInfoClickListener());
+		btnSavedConfigInfo.addActionListener(new SavedInfoClickListener(configFilePath));
 		jpanel.add(btnSavedConfigInfo);
 
 		label10 = new JLabel("作者：Edward");
@@ -197,19 +234,20 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		box.setBounds(450, 130, 100, 30);
 		jpanel.add(box);
 
-		field = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\src\\cn\\zhanyun\\n18client");
+		// C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\src\\cn\\zhanyun\\n18client
+		field = new JTextField("");
 		field.setBounds(170, 10, 600, 30);
 		jpanel.add(field);
-
-		field1 = new JTextField("C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\res\\layout");
+		// C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\res\\layout
+		field1 = new JTextField("");
 		field1.setBounds(170, 50, 600, 30);
 		jpanel.add(field1);
-
-		field2 = new JTextField("C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\model");
+		// C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\model
+		field2 = new JTextField("");
 		field2.setBounds(170, 90, 600, 30);
 		jpanel.add(field2);
-
-		field3 = new JTextField("1000");
+		// 1000
+		field3 = new JTextField("");
 		field3.setBounds(170, 130, 100, 30);
 		jpanel.add(field3);
 
@@ -244,7 +282,28 @@ public class Main extends JFrame implements ActionListener, ItemListener
 			jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			if (JFileChooser.APPROVE_OPTION == jFileChooser.showOpenDialog(null))
 			{
-				System.out.println("项目路径"+jFileChooser.getSelectedFile().getPath());
+
+				System.out.println("项目路径" + jFileChooser.getSelectedFile().getPath());
+
+				String rootPath = jFileChooser.getSelectedFile().getPath();
+
+				if (userInterface != null)
+				{
+					File file = new File(layoutPath);
+					if (file.mkdirs())
+					{
+						layoutPath = rootPath + "\\res\\layout";
+						androidManifestPath = rootPath + "\\AndroidManifest.xml";
+						System.out.println("xml布局根目录：" + layoutPath);
+						System.out.println("配置文件目录：" + androidManifestPath);
+
+						userInterface.loadXMLFileList(layoutPath);
+						label4.setText(jFileChooser.getSelectedFile().getPath());
+					} else
+					{
+						common.showErrorMessage("找不到xml根目录，请确定项目路径是否正确！");
+					}
+				}
 			}
 		}
 	}
@@ -257,14 +316,116 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	 */
 	public class SavedInfoClickListener implements ActionListener
 	{
+		private String path;
+
+		public SavedInfoClickListener(String path)
+		{
+			this.path = path;
+		}
 
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
 			// TODO Auto-generated method stub
 
-		}
+			File file = new File(path);
 
+			if (file.getParentFile().mkdirs())
+			{
+				System.out.println("创建文件夹成功！");
+			}
+
+			try
+			{
+				if (!file.exists())
+				{
+					if (file.createNewFile())
+					{
+						System.out.println("创建配置文件成功");
+						// 写入配置信息
+						writeConfigFile(file);
+					} else
+					{
+						System.out.println("创建配置文件失败");
+					}
+				} else
+				{
+					CommonMethod.reSetUpFile(file.getPath());
+					writeConfigFile(file);
+				}
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				common.showErrorMessage("保存配置失败！");
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
+	 * 读取配置信息
+	 */
+	public void readConfigInfo(String path)
+	{
+		File file = new File(path);
+		if (file.exists())
+		{
+			String result = CommonMethod.fileToString(file.getPath(), "utf-8");
+			System.out.println("读取配置文件信息如下:");
+			String[] strings = result.split(",");
+
+			for (int i = 0; i < strings.length; i++)
+			{
+				System.out.println("-------->" + strings[i]);
+			}
+
+			try
+			{
+				field.setText(strings[0]);
+				field1.setText(strings[1]);
+				field2.setText(strings[2]);
+				field3.setText(strings[3]);
+				box.setSelectedItem(strings[4]);
+				label4.setText(strings[5]);
+				layoutPath = strings[6];
+				androidManifestPath = strings[7];
+				urlInterface.getField7().setText(strings[8]);
+				urlInterface.getField8().setText(strings[9]);
+				urlInterface.getField9().setText(strings[10]);
+			} catch (Exception e)
+			{
+				System.err.println("读取配置信息出错！");
+			}
+
+		} else
+		{
+			System.out.println("找不到配置文件！");
+		}
+	}
+
+	/**
+	 * 将信息写入配置文件
+	 * 
+	 * @param file
+	 */
+	public void writeConfigFile(File file)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append(field.getText() + ",");
+		sb.append(field1.getText() + ",");
+		sb.append(field2.getText() + ",");
+		sb.append(field3.getText() + ",");
+		sb.append(box.getSelectedItem().toString() + ",");
+		sb.append(label4.getText() + ",");
+		sb.append(layoutPath + ",");
+		sb.append(androidManifestPath + ",");
+		sb.append(urlInterface.getField7().getText() + ",");
+		sb.append(urlInterface.getField8().getText() + ",");
+		sb.append(urlInterface.getField9().getText() + ",");
+		sb.append("null");
+		CommonMethod.inputDataToTargetFile(file.getPath(), sb.toString(), "utf-8");
+		common.showMessage("保存配置成功！");
 	}
 
 	public void stop() throws Exception

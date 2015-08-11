@@ -3,6 +3,7 @@ package pers.edward.androidtool.function;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.RandomAccess;
@@ -79,6 +80,7 @@ public class getUserInterface
 		{
 			String getXmlPath = xmlPathStrList.get(i);
 			System.out.println("xml路径：" + getXmlPath);
+			
 			String uiName = getXmlPath.substring(getXmlPath.lastIndexOf("\\") + 1, getXmlPath.lastIndexOf("."));
 			uiNameList.add(uiName);
 			System.out.println("界面名称：" + uiName);
@@ -106,8 +108,9 @@ public class getUserInterface
 	 * @param configFilePath
 	 * 
 	 * @param codingType
+	 * 
 	 */
-	public void jointConfigInfo(String activityFolderPath, List<String> uiName, String configFilePath, String codingType)
+	public void jointConfigInfo(String activityFolderPath, List<String> uiName, String configFilePath, String codingType) 
 	{
 		// 获取包名路径
 		activityFolderPath = getPackageNamePath(activityFolderPath);

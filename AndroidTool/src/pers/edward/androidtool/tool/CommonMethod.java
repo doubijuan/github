@@ -404,19 +404,20 @@ public class CommonMethod
 	/**
 	 * 重新创建文件，删除再建一个新文件
 	 * 
-	 * @param targetString
+	 * @param targetFilePath
+	 * 
 	 * @return
 	 */
-	public static RandomAccessFile reSetUpFile(String targetString)
+	public static RandomAccessFile reSetUpFile(String targetFilePath)
 	{
 		try
 		{
-			File file = new File(targetString);
+			File file = new File(targetFilePath);
 			if (file.exists())
 			{
 				file.delete();
 				file.createNewFile();
-				return new RandomAccessFile(targetString, "rw");
+				return new RandomAccessFile(targetFilePath, "rw");
 			} else
 			{
 				return null;

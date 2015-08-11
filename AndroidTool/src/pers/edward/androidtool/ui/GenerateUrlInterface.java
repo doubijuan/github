@@ -27,18 +27,37 @@ public class GenerateUrlInterface
 	private String codingType;
 	private static GenerateUrlInterface instance = null;
 
-	public static GenerateUrlInterface getInstanceInterface(JPanel jpanel, Container container, String codingType)
+	public JTextField getField7()
 	{
-
-		if (instance == null)
-		{
-			instance = new GenerateUrlInterface(jpanel, container, codingType);
-		}
-
-		return instance;
+		return field7;
 	}
 
-	private GenerateUrlInterface(JPanel jpanel, Container container, String codingType)
+	public void setField7(JTextField field7)
+	{
+		this.field7 = field7;
+	}
+
+	public JTextField getField8()
+	{
+		return field8;
+	}
+
+	public void setField8(JTextField field8)
+	{
+		this.field8 = field8;
+	}
+
+	public JTextField getField9()
+	{
+		return field9;
+	}
+
+	public void setField9(JTextField field9)
+	{
+		this.field9 = field9;
+	}
+
+	public GenerateUrlInterface(JPanel jpanel, Container container, String codingType)
 	{
 		this.jpanel = jpanel;
 		this.codingType = codingType;
@@ -59,16 +78,17 @@ public class GenerateUrlInterface
 		label15 = new JLabel("Ìæ»»IP±äÁ¿£º");
 		label15.setBounds(10, 90, 150, 30);
 		jpanel.add(label15);
-
-		field7 = new JTextField("http://120.25.218.242:9012/");
+		// http://120.25.218.242:9012/
+		field7 = new JTextField("");
 		field7.setBounds(170, 10, 600, 30);
 		jpanel.add(field7);
-
-		field8 = new JTextField("C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java");
+		// C:\\MyWorkspace\\JAVASE\\github\\AndroidTool\\src\\pers\\edward\\androidtool\\function\\TestUrl.java
+		// C:\\MyWorkspace\\Android\\YunYiPurchase\\YunYiGou\\src\\com\\zhanyun\\yunyigou\\network\\ConnectUrl.java
+		field8 = new JTextField("");
 		field8.setBounds(170, 50, 600, 30);
 		jpanel.add(field8);
-
-		field9 = new JTextField("INTERNET_URL");
+		// INTERFACE_URL
+		field9 = new JTextField("");
 		field9.setBounds(170, 90, 200, 30);
 		jpanel.add(field9);
 
