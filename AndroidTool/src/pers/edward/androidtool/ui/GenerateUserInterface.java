@@ -44,6 +44,16 @@ public class GenerateUserInterface
 	private Main main;
 	private JCheckBox[] checkBoxs;
 
+	public JButton getButton9()
+	{
+		return button9;
+	}
+
+	public void setButton9(JButton button9)
+	{
+		this.button9 = button9;
+	}
+
 	public GenerateUserInterface(JPanel jpanel, Container container, Main main)
 	{
 		this.main = main;
@@ -73,7 +83,6 @@ public class GenerateUserInterface
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		System.out.println("dasds    " + xmlFolderPath);
 		// 设置了才会显示滚动条
 		File file = new File(xmlFolderPath);
 		File[] files = file.listFiles();
@@ -105,6 +114,7 @@ public class GenerateUserInterface
 	public void draw()
 	{
 		// main.getLayoutPath()C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\res\\layout
+		System.out.println("asdasdasd         " + main.getLayoutPath());
 		loadXMLFileList(main.getLayoutPath());
 
 		box = new JComboBox();
@@ -120,6 +130,7 @@ public class GenerateUserInterface
 
 		button9 = new JButton("生成界面UI");
 		button9.setBounds(10, 200, 150, 30);
+		button9.setEnabled(false);
 		button9.setEnabled(false);
 		button9.addActionListener(new ActionListener()
 		{

@@ -24,8 +24,8 @@ public class GenerateUrlInterface
 	private JTextField field7, field8, field9;
 	private JButton button6;
 	private CommonMethod common;
-	private String codingType;
 	private static GenerateUrlInterface instance = null;
+	private Main main;
 
 	public JTextField getField7()
 	{
@@ -57,10 +57,10 @@ public class GenerateUrlInterface
 		this.field9 = field9;
 	}
 
-	public GenerateUrlInterface(JPanel jpanel, Container container, String codingType)
+	public GenerateUrlInterface(JPanel jpanel, Container container, Main main)
 	{
+		this.main = main;
 		this.jpanel = jpanel;
-		this.codingType = codingType;
 		common = new CommonMethod(container);
 		draw();
 	}
@@ -104,7 +104,9 @@ public class GenerateUrlInterface
 				// TODO Auto-generated method stub
 				try
 				{
-					new SelectUrlInterface(field7.getText().toString(), field8.getText().toString(), field9.getText().toString(), codingType);
+					new SelectUrlInterface(field7.getText().toString(), field8.getText().toString(), field9.getText().toString(), main.getBox()
+							.getSelectedItem().toString());
+
 					// SelectUrlInterface.getInstance(field7.getText().toString(),
 					// field8.getText().toString(), field9.getText().toString(),
 					// codingType);

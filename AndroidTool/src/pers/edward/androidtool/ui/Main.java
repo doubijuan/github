@@ -43,15 +43,15 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	private String[] tabName = { "主界面", "生成控件", "生成Model", "生成URL接口", "生成Activity" };
 	private JPanel[] mJpanel;
 	private JLabel label, label1, label2, label3, label9, label10, label11, label4;
-	private JTextField field, field1, field2, field3, field6;
+	private JTextField field, field1, field2, field6;
 	private JButton button1, button2;
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private FileAlterationMonitor monitor = null;
-	private JComboBox box;
+	private JComboBox<String> codingTypeComboBox, intervalComboBox;
 	private CommonMethod common = new CommonMethod(getContentPane());
 	private GenerateUserInterface userInterface;
 	private GenerateUrlInterface urlInterface;
-	private String configFilePath = "F:\\Android code\\android config.txt";
+	
 	// xml文件夹根目录
 	private String layoutPath = null;
 	// 配置文件目录
@@ -72,6 +72,8 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
 		mJpanel = new JPanel[tabName.length];
+		// 获取当前项目路径
+		CommonMethod.configFilePath = System.getProperty("user.dir") + "\\META-INF\\" + "android config.txt";
 
 		for (int i = 0; i < tabName.length; i++)
 		{
@@ -85,11 +87,18 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		setJPanelOneLayout(mJpanel[0]);
 		generateWidgetInterface = new GenerateWidgetInterface(mJpanel[1], getContentPane(), this);
 		GenerateModelInterface.getInstanceModel(mJpanel[2], getContentPane(), this);
-		urlInterface = new GenerateUrlInterface(mJpanel[3], getContentPane(), box.getSelectedItem().toString());
+		urlInterface = new GenerateUrlInterface(mJpanel[3], getContentPane(), this);
 		userInterface = new GenerateUserInterface(mJpanel[4], getContentPane(), this);
 
 		// 读取配置信息
-		readConfigInfo(configFilePath);
+		readConfigInfo(CommonMethod.configFilePath);
+
+		// 此处需要重构！！！，加载生成Activity页面的xml文件列表
+		if (layoutPath != null || "".equals(layoutPath))
+		{
+			userInterface.getButton9().setEnabled(true);
+			userInterface.loadXMLFileList(layoutPath);
+		}
 
 		container.add(tabbedPane, BorderLayout.CENTER);
 	}
@@ -111,12 +120,12 @@ public class Main extends JFrame implements ActionListener, ItemListener
 
 	public JComboBox getBox()
 	{
-		return box;
+		return codingTypeComboBox;
 	}
 
 	public void setBox(JComboBox box)
 	{
-		this.box = box;
+		this.codingTypeComboBox = box;
 	}
 
 	public String getActivityPathStrStr()
@@ -218,21 +227,20 @@ public class Main extends JFrame implements ActionListener, ItemListener
 
 		btnSavedConfigInfo = new JButton("保存配置信息");
 		btnSavedConfigInfo.setBounds(10, 300, 150, 30);
-		btnSavedConfigInfo.addActionListener(new SavedInfoClickListener(configFilePath));
+		btnSavedConfigInfo.addActionListener(new SavedInfoClickListener(CommonMethod.configFilePath));
 		jpanel.add(btnSavedConfigInfo);
 
 		label10 = new JLabel("作者：Edward");
 		label10.setBounds(700, 290, 100, 50);
 		jpanel.add(label10);
 
-		// 下拉列表（为了能够兼容JDK1.6版本，此处JComboBox不添加<String>）
-		box = new JComboBox();
-		box.addItem("gbk");
-		box.addItem("utf-8");
-		box.addItem("ISO-8859-1");
-		box.setBackground(Color.white);
-		box.setBounds(450, 130, 100, 30);
-		jpanel.add(box);
+		codingTypeComboBox = new JComboBox<String>();
+		codingTypeComboBox.addItem("gbk");
+		codingTypeComboBox.addItem("utf-8");
+		codingTypeComboBox.addItem("ISO-8859-1");
+		codingTypeComboBox.setBackground(Color.white);
+		codingTypeComboBox.setBounds(450, 130, 100, 30);
+		jpanel.add(codingTypeComboBox);
 
 		// C:\\MyWorkspace\\Android\\YiHuaHotel\\N18Client\\src\\cn\\zhanyun\\n18client
 		field = new JTextField("");
@@ -246,10 +254,19 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		field2 = new JTextField("");
 		field2.setBounds(170, 90, 600, 30);
 		jpanel.add(field2);
-		// 1000
-		field3 = new JTextField("");
-		field3.setBounds(170, 130, 100, 30);
-		jpanel.add(field3);
+
+		intervalComboBox = new JComboBox<String>();
+		intervalComboBox.addItem("1");
+		intervalComboBox.addItem("2");
+		intervalComboBox.addItem("3");
+		intervalComboBox.addItem("5");
+		intervalComboBox.addItem("10");
+		intervalComboBox.setBounds(170, 130, 40, 30);
+		jpanel.add(intervalComboBox);
+
+		JLabel seconds = new JLabel("秒");
+		seconds.setBounds(220, 130, 50, 30);
+		jpanel.add(seconds);
 
 		button1 = new JButton("开始监听");
 		button1.setBounds(10, 250, 150, 30);
@@ -289,13 +306,15 @@ public class Main extends JFrame implements ActionListener, ItemListener
 
 				if (userInterface != null)
 				{
-					File file = new File(layoutPath);
-					if (file.mkdirs())
+					File file = new File(rootPath);
+					if (file.isDirectory())
 					{
 						layoutPath = rootPath + "\\res\\layout";
 						androidManifestPath = rootPath + "\\AndroidManifest.xml";
 						System.out.println("xml布局根目录：" + layoutPath);
 						System.out.println("配置文件目录：" + androidManifestPath);
+
+						userInterface.getButton9().setEnabled(true);
 
 						userInterface.loadXMLFileList(layoutPath);
 						label4.setText(jFileChooser.getSelectedFile().getPath());
@@ -385,10 +404,11 @@ public class Main extends JFrame implements ActionListener, ItemListener
 				field.setText(strings[0]);
 				field1.setText(strings[1]);
 				field2.setText(strings[2]);
-				field3.setText(strings[3]);
-				box.setSelectedItem(strings[4]);
+				intervalComboBox.setSelectedItem(strings[3]);
+				codingTypeComboBox.setSelectedItem(strings[4]);
 				label4.setText(strings[5]);
 				layoutPath = strings[6];
+				System.err.println("hello        " + strings[6]);
 				androidManifestPath = strings[7];
 				urlInterface.getField7().setText(strings[8]);
 				urlInterface.getField8().setText(strings[9]);
@@ -415,8 +435,8 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		sb.append(field.getText() + ",");
 		sb.append(field1.getText() + ",");
 		sb.append(field2.getText() + ",");
-		sb.append(field3.getText() + ",");
-		sb.append(box.getSelectedItem().toString() + ",");
+		sb.append(intervalComboBox.getSelectedItem().toString() + ",");
+		sb.append(codingTypeComboBox.getSelectedItem().toString() + ",");
 		sb.append(label4.getText() + ",");
 		sb.append(layoutPath + ",");
 		sb.append(androidManifestPath + ",");
@@ -510,7 +530,8 @@ public class Main extends JFrame implements ActionListener, ItemListener
 			try
 			{
 				GetGenerateModel model = new GetGenerateModel();
-				model.test(label11.getText().toString(), field2.getText().toString(), field6.getText().toString(), box.getSelectedItem().toString());
+				model.test(label11.getText().toString(), field2.getText().toString(), field6.getText().toString(), codingTypeComboBox
+						.getSelectedItem().toString());
 
 				common.showMessage("生成文件成功！");
 			} catch (Exception e)
@@ -528,7 +549,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	 */
 	public void setListener()
 	{
-		monitor = new FileAlterationMonitor(Integer.valueOf(field3.getText().toString()));
+		monitor = new FileAlterationMonitor(Integer.valueOf(intervalComboBox.getSelectedItem().toString()) * 1000);
 		monitor(field.getText().toString().trim(), new FileChangeListener(new setChangeFilePath()
 		{
 
@@ -565,7 +586,6 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		field.setEditable(false);
 		field1.setEditable(false);
 		field2.setEditable(false);
-		field3.setEditable(false);
 		button1.setEnabled(false);
 		generateWidgetInterface.getButton3().setEnabled(true);
 		button2.setEnabled(true);
@@ -579,7 +599,6 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		field.setEditable(true);
 		field1.setEditable(true);
 		field2.setEditable(true);
-		field3.setEditable(true);
 		button1.setEnabled(true);
 		generateWidgetInterface.getButton3().setEnabled(false);
 		button2.setEnabled(false);
