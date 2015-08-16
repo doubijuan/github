@@ -47,7 +47,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 	private JButton button1, button2;
 	private String activityPathStrStr = "", xmlPathStr = "";
 	private FileAlterationMonitor monitor = null;
-	private JComboBox<String> codingTypeComboBox, intervalComboBox;
+	private JComboBox codingTypeComboBox, intervalComboBox;
 	private CommonMethod common = new CommonMethod(getContentPane());
 	private GenerateUserInterface userInterface;
 	private GenerateUrlInterface urlInterface;
@@ -234,7 +234,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		label10.setBounds(700, 290, 100, 50);
 		jpanel.add(label10);
 
-		codingTypeComboBox = new JComboBox<String>();
+		codingTypeComboBox = new JComboBox();
 		codingTypeComboBox.addItem("gbk");
 		codingTypeComboBox.addItem("utf-8");
 		codingTypeComboBox.addItem("ISO-8859-1");
@@ -255,7 +255,7 @@ public class Main extends JFrame implements ActionListener, ItemListener
 		field2.setBounds(170, 90, 600, 30);
 		jpanel.add(field2);
 
-		intervalComboBox = new JComboBox<String>();
+		intervalComboBox = new JComboBox();
 		intervalComboBox.addItem("1");
 		intervalComboBox.addItem("2");
 		intervalComboBox.addItem("3");
