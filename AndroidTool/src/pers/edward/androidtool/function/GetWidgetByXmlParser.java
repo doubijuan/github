@@ -77,33 +77,6 @@ public class GetWidgetByXmlParser
 	}
 
 	/**
-	 * 重新创建文件，删除再建一个新文件
-	 * 
-	 * @param targetString
-	 * @return
-	 */
-	public RandomAccessFile reSetUpFile(String targetString)
-	{
-		RandomAccessFile rf = null;
-		try
-		{
-			File file = new File(targetString);
-			if (file.exists())
-			{
-				file.delete();
-				file.createNewFile();
-				rf = new RandomAccessFile(targetString, "rw");
-			}
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		return rf;
-	}
-
-	/**
 	 * 核心代码，生成声明控件变量，实例化控件代码
 	 * 
 	 * @param result
@@ -155,8 +128,9 @@ public class GetWidgetByXmlParser
 		{
 			System.out.println("not find for example public class XXXXX extends XXXXX {");
 		}
+		
 		// 将数据写入指定文件中
-		inputDataToTargetFile(targetFilePath, sb.toString(), codeType);
+		CommonMethod.inputDataToTargetFile(targetFilePath, sb.toString(), codeType);
 	}
 
 	/**
@@ -264,7 +238,7 @@ public class GetWidgetByXmlParser
 	{
 		String result = CommonMethod.fileToString(targetFilepPath, codingType);
 		listMethod = new ArrayList<String>();
-		
+
 		// 根据指定规则提取目标文件方法列表
 		Pattern pattern = Pattern.compile("([public|private|protected]*\\s+[\\w]+\\s+[\\w]+\\([^)]*\\)\\s*\\{)");
 		Matcher matcher = pattern.matcher(result);
@@ -276,30 +250,6 @@ public class GetWidgetByXmlParser
 		}
 
 		return listMethod;
-	}
-
-	/**
-	 * 将数据写入到指定的文件中
-	 * 
-	 * @param targetFilePath
-	 * 
-	 * @param methodName
-	 */
-	public void inputDataToTargetFile(String targetFilePath, String variableString, String codingType)
-	{
-		try
-		{
-			RandomAccessFile rf = reSetUpFile(targetFilePath);
-			// String temp = new String(variableString.getBytes("iso-8859-1"),
-			// codingType);
-			rf.write(variableString.getBytes(codingType));
-			rf.close();
-		} catch (IOException e)
-		{
-			System.err.println("写入控件变量异常！！！");
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**

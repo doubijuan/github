@@ -4,15 +4,19 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +33,6 @@ import javax.swing.tree.TreePath;
 import cpdetector.io.ASCIIDetector;
 import cpdetector.io.CodepageDetectorProxy;
 import cpdetector.io.JChardetFacade;
-import cpdetector.io.ParsingDetector;
 import cpdetector.io.UnicodeDetector;
 
 /**
@@ -40,6 +43,9 @@ import cpdetector.io.UnicodeDetector;
  */
 public class CommonMethod
 {
+	public static String configFilePath = "";
+	public static String backupsPath = "";
+
 	private Container container;
 
 	public CommonMethod()
@@ -398,6 +404,129 @@ public class CommonMethod
 		} else
 		{
 			tree.collapsePath(parent);
+		}
+	}
+
+	/**
+	 * 重新创建文件，删除再建一个新文件
+	 * 
+	 * @param targetFilePath
+	 * 
+	 * @return
+	 */
+	public static RandomAccessFile reSetUpFile(String targetFilePath)
+	{
+		try
+		{
+			File file = new File(targetFilePath);
+			if (file.exists())
+			{
+				createBackUpsFile(file);
+
+				file.delete();
+				file.createNewFile();
+				return new RandomAccessFile(targetFilePath, "rw");
+			} else
+			{
+				return null;
+			}
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 创建备份文件
+	 */
+	public static void createBackUpsFile(File file)
+	{
+		File fileTemp = new File(configFilePath);
+
+		fileTemp = fileTemp.getParentFile();
+
+		backupsPath = fileTemp + "\\backups";
+
+		fileTemp = new File(backupsPath);
+
+		// 创建备份文件夹
+		if (fileTemp.mkdir())
+		{
+			System.out.println("创建备份文件夹成功！");
+		}
+
+		fileTemp = new File(backupsPath);
+		File[] files = fileTemp.listFiles();
+
+		String newName = "(" + (files.length + 1) + ")" + file.getName();
+		System.out.println("备份文件名称：" + newName);
+		System.out.println("备份文件路径：" + backupsPath + "\\" + newName);
+
+		fileTemp = new File(backupsPath + "\\" + newName);
+
+		if (!fileTemp.exists())
+		{
+			try
+			{
+				fileTemp.createNewFile();
+				fileCopy(file, fileTemp);
+
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else
+		{
+			System.out.println("备份文件已存在！");
+		}
+
+	}
+
+	/**
+	 * @param copyFile
+	 * @param targetFile
+	 */
+	public static void fileCopy(File copyFile, File targetFile) throws Exception
+	{
+		String result = CommonMethod.fileToString(copyFile.getPath(), "utf-8");
+		RandomAccessFile rf = new RandomAccessFile(targetFile, "rw");
+		rf.write(result.getBytes("utf-8"));
+		rf.close();
+	}
+
+	/**
+	 * 将数据写入到指定的文件中
+	 * 
+	 * @param targetFilePath
+	 * 
+	 * @param methodName
+	 * 
+	 */
+	public static void inputDataToTargetFile(String targetFilePath, String insertContent, String codingType)
+	{
+		if (targetFilePath.isEmpty() && insertContent.isEmpty() && codingType.isEmpty())
+		{
+			System.out.println("目标文件，写入内容，编码类型不能为空！");
+			return;
+		}
+
+		try
+		{
+			RandomAccessFile rf = CommonMethod.reSetUpFile(targetFilePath);
+			rf.write(insertContent.getBytes(codingType));
+			rf.close();
+		} catch (IOException e)
+		{
+			System.err.println("写入" + insertContent + "异常！！！");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
